@@ -22,7 +22,7 @@ import AllStages from '@/views/stages/AllStages.vue'
 import Accounts from '@/views/accounts/Accounts.vue'
 import Attendance from '@/views/attendance/Attendance.vue'
 import CoursesStudents from '@/views/CoursesStudents/CoursesStudents.vue'
-
+import Notifications from '@/views/Notifications/Notifications.vue'
 // ========================
 // Define application routes
 // ========================
@@ -53,6 +53,7 @@ const routes = [
   { path: '/accounts', name: 'accounts', component: Accounts, meta: { requiresAuth: true } },
   { path: '/attendance', name: 'attendance', component: Attendance, meta: { requiresAuth: true } },
   {path: '/course.students', name: "course.students", component: CoursesStudents, meta: { requiresAuth: true }},
+  {path: '/notifications', name: "notifications", component: Notifications, meta: { requiresAuth: true }},
 ]
 
 // ========================

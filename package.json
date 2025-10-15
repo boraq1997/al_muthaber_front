@@ -14,14 +14,17 @@
     "@fortawesome/vue-fontawesome": "^3.0.8",
     "@johmun/vue-tags-input": "^2.1.0",
     "@tailwindcss/vite": "^4.1.11",
+    "apexcharts": "^5.3.5",
     "axios": "^1.10.0",
     "chart.js": "^4.5.0",
     "flatpickr": "^4.6.13",
     "flowbite": "^3.1.2",
     "flowbite-vue": "^0.2.1",
+    "lodash": "^4.17.21",
     "vue": "^3.5.17",
     "vue-multiselect": "^3.0.0-beta.3",
-    "vue-router": "^4.5.1"
+    "vue-router": "^4.5.1",
+    "vue3-apexcharts": "^1.8.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.11",

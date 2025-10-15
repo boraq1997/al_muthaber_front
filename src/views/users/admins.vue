@@ -22,19 +22,6 @@
         <li>
           <div class="flex items-center mt-2 sm:mt-0">
             <font-awesome-icon icon="fa-solid fa-angle-left" class="w-3 h-3 text-gray-400 mx-1 hidden sm:block" />
-            <div class="relative w-full sm:w-48">
-              <input
-                id="search"
-                type="search"
-                required
-                placeholder="البحث"
-                class="w-full border text-xs sm:text-sm border-gray-300 rounded-md px-3 py-1 pr-10 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent transition"
-              />
-              <font-awesome-icon
-                icon="fa-magnifying-glass"
-                class="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-400 pointer-events-none w-3 h-3 sm:w-4 sm:h-4"
-              />
-            </div>
           </div>
         </li>
       </ol>
@@ -42,12 +29,6 @@
 
     <!-- Buttons -->
     <div class="flex items-center gap-2 flex-wrap">
-      <button
-        class="flex items-center gap-1 bg-gray-200 hover:bg-gray-300 text-gray-800 text-xs sm:text-sm font-medium px-3 sm:px-5 py-2 sm:py-2.5 rounded shadow transition"
-      >
-        <font-awesome-icon icon="fa-filter" class="w-3 h-3 sm:w-4 sm:h-4" />
-        فلترة
-      </button>
       <button
         @click="openModal(false)"
         type="button"
@@ -244,6 +225,7 @@
                 <div class="relative">
                   <select
                     v-model="form.instituteId"
+                    :attr="form"
                     id="institute"
                     class="w-full pl-3 pr-10 py-1.5 sm:py-2 text-xs sm:text-base border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200"
                     :class="errors.instituteId ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 dark:border-gray-600 focus:ring-purple-500 focus:border-transparent'"
@@ -267,7 +249,7 @@
           <button
             @click="closeModal"
             type="button"
-            class="px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 mr-2 sm:mr-3"
+            class="px-3 sm:px-4 py-1.5 mr-1 ml-2 sm:py-2 text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:mr-3"
           >
             إلغاء
           </button>
@@ -386,13 +368,14 @@ const resetForm = () => {
   isEditMode.value = false
 }
 
-const startEdit = (admin) => {
+const startEdit = async (admin) => {
+  await getInstitute() // تحميل قائمة المعاهد أولاً
   form.value = {
     fullname: admin.full_name,
     phone_number: admin.phone_number,
     username: admin.username,
     password: '',
-    instituteId: admin.institute_id || ''
+    instituteId: admin.institute_id ? String(admin.institute_id) :  ''
   }
   errors.value = {
     fullname: '',
@@ -457,9 +440,9 @@ const handleSubmit = async () => {
     }
 
     if (isEditMode.value) {
-      await api.put(`/admins/${AdminId.value}`, payload)
+      const response = await api.put(`/admins/${AdminId.value}`, payload)
     } else {
-      await api.post('/admins', payload)
+      const response = await api.post('/admins', payload)
     }
 
     await fetchAdmins()
@@ -514,8 +497,8 @@ const showDeleteModal = ref(false)
 const openModal = async (editMode = false) => {
   isEditMode.value = editMode
   if (!editMode) resetForm()
-  showAddEditModal.value = true
   await getInstitute()
+  showAddEditModal.value = true
 }
 
 const closeModal = () => {

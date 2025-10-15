@@ -15,7 +15,7 @@
           role="presentation"
         >
           <button
-            class="relative inline-block px-3 sm:px-6 py-2 sm:py-3 border-b-2 transition-all duration-300 ease-in-out text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400"
+            class="relative inline-block px-3 sm:px-6 py-2 sm:py-3 border-b-2 transition-all duration-300 ease-in-out text-gray-600 dark:text-gray-600 hover:text-indigo-600 dark:hover:text-indigo-400"
             :id="`tab-${course.id}`"
             :class="{
               'text-indigo-600 border-indigo-600 dark:text-indigo-400 dark:border-indigo-400': selectedCourse?.id === course.id,
@@ -49,276 +49,279 @@
 
     <!-- Tabs Content -->
     <div id="course-tab-content">
-      <div
-        v-for="course in courses"
-        :key="`content-${course.id}`"
-        v-show="selectedCourse?.id === course.id"
-        class="space-y-6 sm:space-y-8 animate-fade-in"
-        role="tabpanel"
-        :aria-labelledby="`tab-${course.id}`"
-      >
-        <!-- Course Info Card -->
-        <div class="relative bg-white/95 dark:bg-gray-900/95 backdrop-blur-lg rounded-lg sm:rounded-2xl p-4 sm:p-6 md:p-8 shadow-lg transition-all duration-500 hover:shadow-xl hover:-translate-y-1 border border-gray-100/20 dark:border-gray-800/20 overflow-hidden">
-          <div class="absolute inset-0 bg-gradient-to-br from-indigo-50/10 to-purple-50/10 dark:from-indigo-900/10 dark:to-purple-900/10 opacity-0 hover:opacity-100 transition-opacity duration-500"></div>
-          <div class="relative flex flex-col gap-4">
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 animate-slide-in" style="--animation-delay: 0ms">
-              <h2 class="text-lg sm:text-2xl md:text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">
-                {{ course.CourseName }}
-              </h2>
-              <div class="flex space-x-2">
-                <button
-                  @click="openEditCourseModal(course)"
-                  class="relative bg-gradient-to-r rounded-lg from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-semibold px-4 sm:px-6 py-2 shadow-md transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-indigo-500/50 dark:focus:ring-indigo-400/50"
-                  aria-label="تعديل بيانات الدورة"
-                  style="background: #6f225e"
-                >
-                  <font-awesome-icon icon="fa-solid fa-pen-to-square" class="me-1 sm:me-2 w-3 h-3 sm:w-4 sm:h-4" />
-                  <span class="relative z-10">تعديل</span>
-                </button>
-                <button
-                  @click="openDeleteCourseModal(course)"
-                  class="relative bg-gradient-to-r rounded-lg from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-semibold px-4 sm:px-6 py-2 shadow-md transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-red-500/50 dark:focus:ring-red-400/50"
-                  aria-label="حذف الدورة"
-                >
-                  <font-awesome-icon icon="fa-solid fa-trash-can" class="me-1 sm:me-2 w-3 h-3 sm:w-4 sm:h-4" />
-                  <span class="relative z-10">حذف</span>
-                </button>
+      <div v-for="course in courses"
+        :key="`content-${course.id}`">
+        <div
+          
+          v-if="selectedCourse && course && selectedCourse.id === course.id"
+          class="space-y-6 sm:space-y-8 animate-fade-in"
+          role="tabpanel"
+          :aria-labelledby="`tab-${course.id}`"
+        >
+          <!-- Course Info Card -->
+          <div class="relative bg-white/95 dark:bg-gray-900/95 backdrop-blur-lg rounded-lg sm:rounded-2xl p-4 sm:p-6 md:p-8 shadow-lg transition-all duration-500 hover:shadow-xl hover:-translate-y-1 border border-gray-100/20 dark:border-gray-800/20 overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-br from-indigo-50/10 to-purple-50/10 dark:from-indigo-900/10 dark:to-purple-900/10 opacity-0 hover:opacity-100 transition-opacity duration-500"></div>
+            <div class="relative flex flex-col gap-4">
+              <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 animate-slide-in" style="--animation-delay: 0ms">
+                <h2 class="text-lg sm:text-2xl md:text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">
+                  {{ course.CourseName }}
+                </h2>
+                <div class="flex space-x-2">
+                  <button
+                    @click="openEditCourseModal(course)"
+                    class="relative bg-gradient-to-r rounded-lg from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-semibold px-4 sm:px-6 py-2 shadow-md transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-indigo-500/50 dark:focus:ring-indigo-400/50"
+                    aria-label="تعديل بيانات الدورة"
+                    style="background: #6f225e"
+                  >
+                    <font-awesome-icon icon="fa-solid fa-pen-to-square" class="me-1 sm:me-2 w-3 h-3 sm:w-4 sm:h-4" />
+                    <span class="relative z-10">تعديل</span>
+                  </button>
+                  <button
+                    @click="openDeleteCourseModal(course)"
+                    class="relative bg-gradient-to-r rounded-lg from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-semibold px-4 sm:px-6 py-2 shadow-md transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-red-500/50 dark:focus:ring-red-400/50"
+                    aria-label="حذف الدورة"
+                  >
+                    <font-awesome-icon icon="fa-solid fa-trash-can" class="me-1 sm:me-2 w-3 h-3 sm:w-4 sm:h-4" />
+                    <span class="relative z-10">حذف</span>
+                  </button>
+                </div>
               </div>
-            </div>
-            <div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 text-xs sm:text-sm text-gray-600 dark:text-gray-200 animate-slide-in" style="--animation-delay: 100ms">
-              <div class="flex items-center space-x-2 sm:space-x-3 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200">
-                <font-awesome-icon icon="fa-solid fa-book" class="text-indigo-500 dark:text-indigo-400 w-4 h-4 sm:w-5 sm:h-5 transform transition-transform duration-300 hover:scale-110" />
-                <span><strong class="font-semibold text-gray-800 dark:text-gray-100">المادة:</strong> {{ course.subject_name }}</span>
-              </div>
-              <div class="hidden sm:block h-4 sm:h-6 border-l border-gray-200 dark:border-gray-700"></div>
-              <div class="flex items-center space-x-2 sm:space-x-3 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200">
-                <font-awesome-icon icon="fa-solid fa-building" class="text-indigo-500 dark:text-indigo-400 w-4 h-4 sm:w-5 sm:h-5 transform transition-transform duration-300 hover:scale-110" />
-                <span><strong class="font-semibold text-gray-800 dark:text-gray-100">المعهد:</strong> {{ course.institute_name }}</span>
-              </div>
-              <div class="hidden sm:block h-4 sm:h-6 border-l border-gray-200 dark:border-gray-700"></div>
-              <div class="flex items-center space-x-2 sm:space-x-3 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200">
-                <font-awesome-icon icon="fa-solid fa-layer-group" class="text-indigo-500 dark:text-indigo-400 w-4 h-4 sm:w-5 sm:h-5 transform transition-transform duration-300 hover:scale-110" />
-                <span><strong class="font-semibold text-gray-800 dark:text-gray-100">المرحلة:</strong> {{ course.stage_name }}</span>
-              </div>
-              <div class="hidden sm:block h-4 sm:h-6 border-l border-gray-200 dark:border-gray-700"></div>
-              <div class="flex items-center space-x-2 sm:space-x-3 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200">
-                <font-awesome-icon icon="fa-solid fa-chalkboard-teacher" class="text-indigo-500 dark:text-indigo-400 w-4 h-4 sm:w-5 sm:h-5 transform transition-transform duration-300 hover:scale-110" />
-                <span><strong class="font-semibold text-gray-800 dark:text-gray-100">المدرس:</strong> {{ course.teacher_name }}</span>
-              </div>
-              <div class="hidden sm:block h-4 sm:h-6 border-l border-gray-200 dark:border-gray-700"></div>
-              <div class="flex items-center space-x-2 sm:space-x-3 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200">
-                <font-awesome-icon icon="fa-solid fa-calendar" class="text-indigo-500 dark:text-indigo-400 w-4 h-4 sm:w-5 sm:h-5 transform transition-transform duration-300 hover:scale-110" />
-                <span><strong class="font-semibold text-gray-800 dark:text-gray-100">التاريخ:</strong> {{ course.Course_date }}</span>
-              </div>
-              <div class="hidden sm:block h-4 sm:h-6 border-l border-gray-200 dark:border-gray-700"></div>
-              <div class="flex items-center space-x-2 sm:space-x-3 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200">
-                <font-awesome-icon icon="fa-solid fa-money-bill" class="text-indigo-500 dark:text-indigo-400 w-4 h-4 sm:w-5 sm:h-5 transform transition-transform duration-300 hover:scale-110" />
-                <span><strong class="font-semibold text-gray-800 dark:text-gray-100">السعر:</strong> {{ formatCurrency(course.Course_price) }} دينار</span>
+              <div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 text-xs sm:text-sm text-gray-600 dark:text-gray-200 animate-slide-in" style="--animation-delay: 100ms">
+                <div class="flex items-center space-x-2 sm:space-x-3 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200">
+                  <font-awesome-icon icon="fa-solid fa-book" class="text-indigo-500 dark:text-indigo-400 w-4 h-4 sm:w-5 sm:h-5 transform transition-transform duration-300 hover:scale-110" />
+                  <span><strong class="font-semibold text-gray-800 dark:text-gray-100">المادة:</strong> {{ course.subject_name }}</span>
+                </div>
+                <div class="hidden sm:block h-4 sm:h-6 border-l border-gray-200 dark:border-gray-700"></div>
+                <div class="flex items-center space-x-2 sm:space-x-3 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200">
+                  <font-awesome-icon icon="fa-solid fa-building" class="text-indigo-500 dark:text-indigo-400 w-4 h-4 sm:w-5 sm:h-5 transform transition-transform duration-300 hover:scale-110" />
+                  <span><strong class="font-semibold text-gray-800 dark:text-gray-100">المعهد:</strong> {{ course.institute_name }}</span>
+                </div>
+                <div class="hidden sm:block h-4 sm:h-6 border-l border-gray-200 dark:border-gray-700"></div>
+                <div class="flex items-center space-x-2 sm:space-x-3 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200">
+                  <font-awesome-icon icon="fa-solid fa-layer-group" class="text-indigo-500 dark:text-indigo-400 w-4 h-4 sm:w-5 sm:h-5 transform transition-transform duration-300 hover:scale-110" />
+                  <span><strong class="font-semibold text-gray-800 dark:text-gray-100">المرحلة:</strong> {{ course.stage_name }}</span>
+                </div>
+                <div class="hidden sm:block h-4 sm:h-6 border-l border-gray-200 dark:border-gray-700"></div>
+                <div class="flex items-center space-x-2 sm:space-x-3 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200">
+                  <font-awesome-icon icon="fa-solid fa-chalkboard-teacher" class="text-indigo-500 dark:text-indigo-400 w-4 h-4 sm:w-5 sm:h-5 transform transition-transform duration-300 hover:scale-110" />
+                  <span><strong class="font-semibold text-gray-800 dark:text-gray-100">المدرس:</strong> {{ course.teacher_name }}</span>
+                </div>
+                <div class="hidden sm:block h-4 sm:h-6 border-l border-gray-200 dark:border-gray-700"></div>
+                <div class="flex items-center space-x-2 sm:space-x-3 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200">
+                  <font-awesome-icon icon="fa-solid fa-calendar" class="text-indigo-500 dark:text-indigo-400 w-4 h-4 sm:w-5 sm:h-5 transform transition-transform duration-300 hover:scale-110" />
+                  <span><strong class="font-semibold text-gray-800 dark:text-gray-100">التاريخ:</strong> {{ course.Course_date }}</span>
+                </div>
+                <div class="hidden sm:block h-4 sm:h-6 border-l border-gray-200 dark:border-gray-700"></div>
+                <div class="flex items-center space-x-2 sm:space-x-3 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200">
+                  <font-awesome-icon icon="fa-solid fa-money-bill" class="text-indigo-500 dark:text-indigo-400 w-4 h-4 sm:w-5 sm:h-5 transform transition-transform duration-300 hover:scale-110" />
+                  <span><strong class="font-semibold text-gray-800 dark:text-gray-100">السعر:</strong> {{ formatCurrency(course.Course_price) }} دينار</span>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <!-- Units Card -->
-        <div class="bg-white/95 dark:bg-gray-900/95 backdrop-blur-lg rounded-lg sm:rounded-2xl p-4 sm:p-6 md:p-8 shadow-lg transition-all duration-500 hover:shadow-xl border border-gray-100/20 dark:border-gray-800/20">
-          <div class="flex items-center justify-between mb-4 sm:mb-6">
-            <h3 class="text-lg sm:text-xl md:text-2xl font-semibold text-gray-900 dark:text-white animate-slide-in" style="--animation-delay: 0ms">
-              الوحدات المرتبطة بالدورة
-            </h3>
-            <button
-              @click="openAddUnitModal"
-              class="relative bg-gradient-to-r rounded-lg from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-semibold px-4 sm:px-6 py-2 shadow-md transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-indigo-500/50 dark:focus:ring-indigo-400/50"
-              aria-label="إضافة وحدة جديدة"
-              style="background: #6f225e"
-            >
-              <font-awesome-icon icon="fa-solid fa-plus" class="me-1 sm:me-2 w-3 h-3 sm:w-4 sm:h-4" />
-              <span class="relative z-10">إضافة وحدة</span>
-            </button>
-          </div>
+          <!-- Units Card -->
+          <div class="bg-white/95 dark:bg-gray-900/95 backdrop-blur-lg rounded-lg sm:rounded-2xl p-4 sm:p-6 md:p-8 shadow-lg transition-all duration-500 hover:shadow-xl border border-gray-100/20 dark:border-gray-800/20">
+            <div class="flex items-center justify-between mb-4 sm:mb-6">
+              <h3 class="text-lg sm:text-xl md:text-2xl font-semibold text-gray-900 dark:text-white animate-slide-in" style="--animation-delay: 0ms">
+                الوحدات المرتبطة بالدورة
+              </h3>
+              <button
+                @click="openAddUnitModal"
+                class="relative bg-gradient-to-r rounded-lg from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-semibold px-4 sm:px-6 py-2 shadow-md transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-indigo-500/50 dark:focus:ring-indigo-400/50"
+                aria-label="إضافة وحدة جديدة"
+                style="background: #6f225e"
+              >
+                <font-awesome-icon icon="fa-solid fa-plus" class="me-1 sm:me-2 w-3 h-3 sm:w-4 sm:h-4" />
+                <span class="relative z-10">إضافة وحدة</span>
+              </button>
+            </div>
 
-          <div v-if="units.length" class="flex flex-col md:flex-row gap-4 sm:gap-6">
-            <ul class="flex-column space-y-3 text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400 mb-4 md:mb-0 w-full md:w-56 lg:w-64">
-              <li v-for="unit in units" :key="unit.id">
-                <button
-                  @click="selectUnit(unit)"
-                  class="inline-flex items-center px-3 sm:px-4 py-2 sm:py-3 w-full rounded-lg transition-all duration-300 hover:bg-indigo-50 dark:hover:bg-indigo-900/50 hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 unit-button"
-                  :class="{
-                    'bg-indigo-600 text-white dark:bg-indigo-500': selectedUnit?.id === unit.id,
-                    'bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-300': selectedUnit?.id !== unit.id
-                  }"
-                  :aria-pressed="selectedUnit?.id === unit.id"
-                >
-                  <font-awesome-icon icon="fa-solid fa-object-group" class="me-2 sm:me-3 w-4 h-4 sm:w-5 sm:h-5 transform transition-transform duration-300 hover:scale-110" />
-                  {{ unit.unitName }}
-                </button>
-              </li>
-            </ul>
+            <div v-if="units.length" class="flex flex-col md:flex-row gap-4 sm:gap-6">
+              <ul class="flex-column space-y-3 text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400 mb-4 md:mb-0 w-full md:w-56 lg:w-64">
+                <li v-for="unit in units" :key="unit.id">
+                  <button
+                    @click="selectUnit(unit)"
+                    class="inline-flex items-center px-3 sm:px-4 py-2 sm:py-3 w-full rounded-lg transition-all duration-300 hover:bg-indigo-50 dark:hover:bg-indigo-900/50 hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 unit-button"
+                    :class="{
+                      'bg-indigo-600 text-white dark:bg-indigo-500': selectedUnit?.id === unit.id,
+                      'bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-300': selectedUnit?.id !== unit.id
+                    }"
+                    :aria-pressed="selectedUnit?.id === unit.id"
+                  >
+                    <font-awesome-icon icon="fa-solid fa-object-group" class="me-2 sm:me-3 w-4 h-4 sm:w-5 sm:h-5 transform transition-transform duration-300 hover:scale-110" />
+                    {{ unit.unitName }}
+                  </button>
+                </li>
+              </ul>
 
-            <div class="p-4 sm:p-6 bg-gray-50/50 dark:bg-gray-800/50 rounded-lg w-full transition-all duration-300 animate-slide-in" style="--animation-delay: 100ms">
-              <div v-if="selectedUnit">
-                <div class="flex items-center justify-between mb-3">
-                  <h4 class="text-base sm:text-lg md:text-xl font-bold text-gray-900 dark:text-white">
+              <div class="p-4 sm:p-6 bg-gray-50/50 dark:bg-gray-800/50 rounded-lg w-full transition-all duration-300 animate-slide-in" style="--animation-delay: 100ms">
+                <div v-if="selectedUnit">
+                  <div class="flex items-center justify-between mb-3">
+                    <h4 class="text-base sm:text-lg md:text-xl font-bold text-gray-900 dark:text-white">
+                      {{ selectedUnit.unitName }}
+                    </h4>
+                    <div class="relative">
+    <button
+      @click="toggleUnitDropdown"
+      class="flex items-center px-2 sm:px-3 py-1 text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400"
+      :aria-expanded="openUnitDropdown"
+      aria-haspopup="true"
+      aria-controls="unit-dropdown"
+    >
+      <font-awesome-icon icon="fa-solid fa-ellipsis-v" class="w-4 h-4 sm:w-5 sm:h-5" />
+    </button>
+    <div
+      v-if="openUnitDropdown"
+      id="unit-dropdown"
+      class="absolute left-0 mt-2 w-40 bg-white dark:bg-gray-900 rounded-lg shadow-lg border border-gray-100/20 dark:border-gray-800/20 z-10 animate-dropdown"
+    >
+      <ul class="py-1 text-xs sm:text-sm text-gray-700 dark:text-gray-200" role="menu">
+        <li role="menuitem">
+          <button
+            @click="openEditUnitModal(selectedUnit)"
+            class="w-full text-right px-4 py-2 hover:bg-indigo-50 dark:hover:bg-indigo-900/50 transition-colors duration-200"
+          >
+            <font-awesome-icon icon="fa-solid fa-pen-to-square" class="me-2 w-4 h-4" />
+            تعديل الوحدة
+          </button>
+        </li>
+        <li role="menuitem">
+          <button
+            @click="openDeleteUnitModal(selectedUnit)"
+            class="w-full text-right px-4 py-2 hover:bg-indigo-50 dark:hover:bg-indigo-900/50 transition-colors duration-200"
+          >
+            <font-awesome-icon icon="fa-solid fa-trash-can" class="me-2 w-4 h-4" />
+            حذف الوحدة
+          </button>
+        </li>
+        <li role="menuitem">
+          <button
+            @click="openAddLectureModal"
+            class="w-full text-right px-4 py-2 hover:bg-indigo-50 dark:hover:bg-indigo-900/50 transition-colors duration-200"
+          >
+            <font-awesome-icon icon="fa-solid fa-plus" class="me-2 w-4 h-4" />
+            إضافة درس
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+                  </div>
+                  <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-300 leading-relaxed mb-4 sm:mb-6">
                     {{ selectedUnit.unitName }}
-                  </h4>
-                  <div class="relative">
-                    <button
-                      @click="toggleUnitDropdown"
-                      class="flex items-center px-2 sm:px-3 py-1 text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400"
-                      :aria-expanded="openUnitDropdown"
-                      aria-haspopup="true"
-                      aria-controls="unit-dropdown"
-                    >
-                      <font-awesome-icon icon="fa-solid fa-ellipsis-v" class="w-4 h-4 sm:w-5 sm:h-5" />
-                    </button>
-                    <div
-                      v-if="openUnitDropdown"
-                      id="unit-dropdown"
-                      class="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-900 rounded-lg shadow-lg border border-gray-100/20 dark:border-gray-800/20 z-10 animate-dropdown"
-                    >
-                      <ul class="py-1 text-xs sm:text-sm text-gray-700 dark:text-gray-200" role="menu">
-                        <li role="menuitem">
-                          <button
-                            @click="openEditUnitModal(selectedUnit)"
-                            class="w-full text-right px-4 py-2 hover:bg-indigo-50 dark:hover:bg-indigo-900/50 transition-colors duration-200"
-                          >
-                            <font-awesome-icon icon="fa-solid fa-pen-to-square" class="me-2 w-4 h-4" />
-                            تعديل الوحدة
-                          </button>
-                        </li>
-                        <li role="menuitem">
-                          <button
-                            @click="openDeleteUnitModal(selectedUnit)"
-                            class="w-full text-right px-4 py-2 hover:bg-indigo-50 dark:hover:bg-indigo-900/50 transition-colors duration-200"
-                          >
-                            <font-awesome-icon icon="fa-solid fa-trash-can" class="me-2 w-4 h-4" />
-                            حذف الوحدة
-                          </button>
-                        </li>
-                        <li role="menuitem">
-                          <button
-                            @click="openAddLectureModal"
-                            class="w-full text-right px-4 py-2 hover:bg-indigo-50 dark:hover:bg-indigo-900/50 transition-colors duration-200"
-                          >
-                            <font-awesome-icon icon="fa-solid fa-plus" class="me-2 w-4 h-4" />
-                            إضافة درس
-                          </button>
-                        </li>
-                      </ul>
-                    </div>
+                  </p>
+
+                  <div v-if="lectures.length" class="space-y-4">
+                    <h5 class="text-sm sm:text-base md:text-lg font-semibold text-gray-900 dark:text-white mb-3 sm:mb-4">
+                      الدروس المرتبطة بالوحدة
+                    </h5>
+                    <ul class="space-y-3 text-xs sm:text-sm text-gray-600 dark:text-gray-200" role="list">
+                      <li
+                        v-for="lecture in lectures"
+                        :key="lecture.id"
+                        class="flex items-center justify-between p-3 bg-white dark:bg-gray-900 rounded-lg shadow-sm hover:bg-indigo-50 dark:hover:bg-indigo-900/50 transition-all duration-300"
+                        role="listitem"
+                      >
+                        <div class="flex items-center space-x-2 sm:space-x-3">
+                          <font-awesome-icon icon="fa-solid fa-video" class="text-indigo-500 dark:text-indigo-400 w-4 h-4 sm:w-5 sm:h-5 transform transition-transform duration-300 hover:scale-110" />
+                          <span>{{ lecture.lecttTitle || 'درس بدون عنوان' }}</span>
+                          <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">
+                            ({{ lecture.attachments?.length || 0 }} ملفات)
+                          </span>
+                        </div>
+                        <!-- The HTML for the lecture dropdown and attachments dropdown -->
+  <div class="relative">
+    <button
+      @click="toggleDropdown(lecture.id)"
+      class="flex items-center px-2 sm:px-3 py-1 text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400"
+      :aria-expanded="openDropdown === lecture.id"
+      aria-haspopup="true"
+      :aria-controls="`dropdown-${lecture.id}`"
+    >
+      <font-awesome-icon icon="fa-solid fa-ellipsis-v" class="w-4 h-4 sm:w-5 sm:h-5" />
+    </button>
+    <div
+      v-if="openDropdown === lecture.id"
+      :id="`dropdown-${lecture.id}`"
+      class="absolute left-0 mt-2 w-40 bg-white dark:bg-gray-900 rounded-lg shadow-lg border border-gray-100/20 dark:border-gray-800/20 z-10 animate-dropdown"
+    >
+      <ul class="py-1 text-xs sm:text-sm text-gray-700 dark:text-gray-200" role="menu">
+        <li role="menuitem">
+          <button
+            @click="openEditLectureModal(lecture)"
+            class="w-full text-right px-4 py-2 hover:bg-indigo-50 dark:hover:bg-indigo-900/50 transition-colors duration-200"
+          >
+            <font-awesome-icon icon="fa-solid fa-pen-to-square" class="me-2 w-4 h-4" />
+            تعديل
+          </button>
+        </li>
+        <li role="menuitem">
+          <button
+            @click="openDeleteLectureModal(lecture)"
+            class="w-full text-right px-4 py-2 hover:bg-indigo-50 dark:hover:bg-indigo-900/50 transition-colors duration-200"
+          >
+            <font-awesome-icon icon="fa-solid fa-trash-can" class="me-2 w-4 h-4" />
+            حذف
+          </button>
+        </li>
+        <li role="menuitem">
+          <button
+            @click="openShowLectureModal(lecture)"
+            class="w-full text-right px-4 py-2 hover:bg-indigo-50 dark:hover:bg-indigo-900/50 transition-colors duration-200"
+          >
+            <font-awesome-icon icon="fa-solid fa-eye" class="me-2 w-4 h-4" />
+            عرض التفاصيل
+          </button>
+        </li>
+        <li role="menuitem">
+          <button
+            @click.stop="toggleAttachmentsDropdown(lecture.id)"
+            class="w-full text-right px-4 py-2 hover:bg-indigo-50 dark:hover:bg-indigo-900/50 transition-colors duration-200"
+          >
+            <font-awesome-icon icon="fa-solid fa-file" class="me-2 w-4 h-4" />
+            عرض الملفات
+          </button>
+        </li>
+      </ul>
+    </div>
+    <!-- Attachments Dropdown -->
+    <div
+      v-if="openAttachmentsDropdown === lecture.id"
+      :id="`attachments-dropdown-${lecture.id}`"
+      class="absolute left-0 mt-2 w-48 bg-white dark:bg-gray-900 rounded-lg shadow-lg border border-gray-100/20 dark:border-gray-800/20 z-20 animate-dropdown"
+    >
+      <ul class="py-1 text-xs sm:text-sm text-gray-700 dark:text-gray-200" role="menu">
+        <li v-if="lecture.attachments?.length === 0" class="px-4 py-2 text-center text-gray-500 dark:text-gray-400">
+          لا توجد ملفات
+        </li>
+        <li v-else v-for="attachment in lecture.attachments" :key="attachment.id" role="menuitem">
+          <button
+            @click="downloadAttachment(attachment.path)"
+            class="w-full text-right px-4 py-2 hover:bg-indigo-50 dark:hover:bg-indigo-900/50 transition-colors duration-200"
+          >
+            <font-awesome-icon :icon="getAttachmentIcon(attachment.path)" class="me-2 w-4 h-4" />
+            عرض الملف {{ attachment.id }}
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+                      </li>
+                    </ul>
+                  </div>
+                  <div v-else class="text-gray-400 dark:text-gray-500 italic text-xs sm:text-sm">
+                    لا توجد دروس مرتبطة بهذه الوحدة.
                   </div>
                 </div>
-                <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-300 leading-relaxed mb-4 sm:mb-6">
-                  {{ selectedUnit.unitName }}
-                </p>
-
-                <div v-if="lectures.length" class="space-y-4">
-                  <h5 class="text-sm sm:text-base md:text-lg font-semibold text-gray-900 dark:text-white mb-3 sm:mb-4">
-                    الدروس المرتبطة بالوحدة
-                  </h5>
-                  <ul class="space-y-3 text-xs sm:text-sm text-gray-600 dark:text-gray-200" role="list">
-                    <li
-                      v-for="lecture in lectures"
-                      :key="lecture.id"
-                      class="flex items-center justify-between p-3 bg-white dark:bg-gray-900 rounded-lg shadow-sm hover:bg-indigo-50 dark:hover:bg-indigo-900/50 transition-all duration-300"
-                      role="listitem"
-                    >
-                      <div class="flex items-center space-x-2 sm:space-x-3">
-                        <font-awesome-icon icon="fa-solid fa-video" class="text-indigo-500 dark:text-indigo-400 w-4 h-4 sm:w-5 sm:h-5 transform transition-transform duration-300 hover:scale-110" />
-                        <span>{{ lecture.lecttTitle || 'درس بدون عنوان' }}</span>
-                        <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">
-                          ({{ lecture.attachments?.length || 0 }} ملفات)
-                        </span>
-                      </div>
-                      <div class="relative">
-                        <button
-                          @click="toggleDropdown(lecture.id)"
-                          class="flex items-center px-2 sm:px-3 py-1 text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400"
-                          :aria-expanded="openDropdown === lecture.id"
-                          aria-haspopup="true"
-                          :aria-controls="`dropdown-${lecture.id}`"
-                        >
-                          <font-awesome-icon icon="fa-solid fa-ellipsis-v" class="w-4 h-4 sm:w-5 sm:h-5" />
-                        </button>
-                        <div
-                          v-if="openDropdown === lecture.id"
-                          :id="`dropdown-${lecture.id}`"
-                          class="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-900 rounded-lg shadow-lg border border-gray-100/20 dark:border-gray-800/20 z-10 animate-dropdown"
-                        >
-                          <ul class="py-1 text-xs sm:text-sm text-gray-700 dark:text-gray-200" role="menu">
-                            <li role="menuitem">
-                              <button
-                                @click="openEditLectureModal(lecture)"
-                                class="w-full text-right px-4 py-2 hover:bg-indigo-50 dark:hover:bg-indigo-900/50 transition-colors duration-200"
-                              >
-                                <font-awesome-icon icon="fa-solid fa-pen-to-square" class="me-2 w-4 h-4" />
-                                تعديل
-                              </button>
-                            </li>
-                            <li role="menuitem">
-                              <button
-                                @click="openDeleteLectureModal(lecture)"
-                                class="w-full text-right px-4 py-2 hover:bg-indigo-50 dark:hover:bg-indigo-900/50 transition-colors duration-200"
-                              >
-                                <font-awesome-icon icon="fa-solid fa-trash-can" class="me-2 w-4 h-4" />
-                                حذف
-                              </button>
-                            </li>
-                            <li role="menuitem">
-                              <button
-                                @click="openShowLectureModal(lecture)"
-                                class="w-full text-right px-4 py-2 hover:bg-indigo-50 dark:hover:bg-indigo-900/50 transition-colors duration-200"
-                              >
-                                <font-awesome-icon icon="fa-solid fa-eye" class="me-2 w-4 h-4" />
-                                عرض التفاصيل
-                              </button>
-                            </li>
-                            <li role="menuitem">
-                              <button
-                                @click="toggleAttachmentsDropdown(lecture.id)"
-                                class="w-full text-right px-4 py-2 hover:bg-indigo-50 dark:hover:bg-indigo-900/50 transition-colors duration-200"
-                              >
-                                <font-awesome-icon icon="fa-solid fa-file" class="me-2 w-4 h-4" />
-                                عرض الملفات
-                              </button>
-                            </li>
-                          </ul>
-                        </div>
-                        <!-- Attachments Dropdown -->
-                        <div
-                          v-if="openAttachmentsDropdown === lecture.id"
-                          :id="`attachments-dropdown-${lecture.id}`"
-                          class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-900 rounded-lg shadow-lg border border-gray-100/20 dark:border-gray-800/20 z-20 animate-dropdown"
-                        >
-                          <ul class="py-1 text-xs sm:text-sm text-gray-700 dark:text-gray-200" role="menu">
-                            <li v-if="lecture.attachments?.length === 0" class="px-4 py-2 text-center text-gray-500 dark:text-gray-400">
-                              لا توجد ملفات
-                            </li>
-                            <li v-else v-for="attachment in lecture.attachments" :key="attachment.id" role="menuitem">
-                              <button
-                                @click="openAttachment(attachment.path)"
-                                class="w-full text-right px-4 py-2 hover:bg-indigo-50 dark:hover:bg-indigo-900/50 transition-colors duration-200"
-                              >
-                                <font-awesome-icon :icon="getAttachmentIcon(attachment.path)" class="me-2 w-4 h-4" />
-                                عرض الملف {{ attachment.id }}
-                              </button>
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                    </li>
-                  </ul>
-                </div>
                 <div v-else class="text-gray-400 dark:text-gray-500 italic text-xs sm:text-sm">
-                  لا توجد دروس مرتبطة بهذه الوحدة.
+                  اختر وحدة لعرض تفاصيلها.
                 </div>
-              </div>
-              <div v-else class="text-gray-400 dark:text-gray-500 italic text-xs sm:text-sm">
-                اختر وحدة لعرض تفاصيلها.
               </div>
             </div>
-          </div>
-          <div v-else class="text-gray-400 dark:text-gray-500 italic text-xs sm:text-sm animate-slide-in" style="--animation-delay: 100ms">
-            لا توجد وحدات مرتبطة بهذه الدورة.
+            <div v-else class="text-gray-400 dark:text-gray-500 italic text-xs sm:text-sm animate-slide-in" style="--animation-delay: 100ms">
+              لا توجد وحدات مرتبطة بهذه الدورة.
+            </div>
           </div>
         </div>
       </div>
@@ -793,7 +796,7 @@
               إلغاء
             </button>
             <button
-              @click="confirmDeleteLecture"
+              @click="handleDeleteLecture(form.id)"
               type="button"
               class="px-4 sm:px-6 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-white bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
             >
@@ -808,7 +811,7 @@
     <!-- Show Lecture Modal -->
     <div v-if="showShowLectureModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md transition-opacity duration-300">
     <div class="relative w-full max-w-[90%] sm:max-w-3xl mx-2 sm:mx-4 lg:mx-6">
-      <div class="relative bg-white dark:bg-gray-900 rounded-lg sm:rounded-2xl shadow-xl overflow-hidden border border-gray-200/50 dark:border-gray-800/50 transition-all duration-500 transform scale-100 animate-slide-in">
+      <div class="relative bg-white dark:bg-gray-900 rounded-lg sm:rounded-2xl shadow-xl border border-gray-200/50 dark:border-gray-800/50 transition-all duration-500 transform scale-100 animate-slide-in">
         <!-- Card inside Modal -->
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
           <!-- Video as Card Image -->
@@ -862,7 +865,7 @@
               </span>
               <div class="relative inline-block">
                 <button
-                  @click="form.id && toggleAttachmentsDropdown(form.id)"
+                  @click.stop="form.id && toggleAttachmentsDropdown(form.id)"
                   class="inline-flex items-center px-3 py-1.5 text-xs sm:text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-800"
                   :disabled="!form.attachments?.length"
                 >
@@ -873,7 +876,7 @@
                 <div
                   v-if="openAttachmentsDropdown === form.id"
                   :id="`attachments-dropdown-modal-${form.id}`"
-                  class="absolute left-0 mt-2 w-48 bg-white dark:bg-gray-900 rounded-lg shadow-lg border border-gray-100/20 dark:border-gray-800/20 z-10 animate-dropdown"
+                  class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-900 rounded-lg shadow-lg border border-gray-100/20 dark:border-gray-800/20 z-50 animate-dropdown"
                 >
                   <ul class="py-1 text-xs sm:text-sm text-gray-700 dark:text-gray-200" role="menu">
                     <li v-if="!form.attachments?.length" class="px-4 py-2 text-center text-gray-500 dark:text-gray-400">
@@ -881,7 +884,7 @@
                     </li>
                     <li v-for="attachment in form.attachments" :key="attachment.id" role="menuitem">
                       <button
-                        @click="openAttachment(attachment.path)"
+                        @click="downloadAttachment(attachment.path)"
                         class="w-full text-right px-4 py-2 hover:bg-indigo-50 dark:hover:bg-indigo-900/50 transition-colors duration-200"
                       >
                         <font-awesome-icon :icon="getAttachmentIcon(attachment.path)" class="me-2 w-4 h-4" />
@@ -919,26 +922,26 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import  type { Ref } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
+import type { Ref } from 'vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { formatCurrency } from '../../../utils/format.ts';
+import { formatCurrency } from '../../utils/format.ts';
 import { useToast } from '@/composables/useToast.ts';
 import api from '@/services/api.ts';
-import { 
-  fetchCourses, 
-  fetchUnits, 
-  fetchLectures, 
-  fetchLectureAttachments, 
-  getInstitutes, 
-  getStages, 
-  getTeachers, 
-  fetchSubjects, 
-  submitCourse, 
-  confirmDeleteCourse, 
-  submitUnit, 
-  confirmDeleteUnit, 
-  confirmDeleteLecture 
+import {
+  fetchCourses,
+  fetchUnits,
+  fetchLectures,
+  fetchLectureAttachments,
+  getInstitutes,
+  getStages,
+  getTeachers,
+  fetchSubjects,
+  submitCourse,
+  confirmDeleteCourse,
+  submitUnit,
+  confirmDeleteUnit,
+  confirmDeleteLecture,
 } from './courses.service.ts';
 
 const { showToastMessage } = useToast();
@@ -1117,6 +1120,8 @@ const submitCourseHandler = async () => {
   } catch (err) {
     console.error('خطأ في إرسال الدورة:', err);
     showToastMessage('error', 'حدث خطأ أثناء إرسال الدورة');
+  } finally {
+    
   }
 };
 
@@ -1221,13 +1226,20 @@ const selectUnit = async (unit: Unit) => {
 
 const fetchAllAttachments = async () => {
   for (let lecture of lectures.value) {
-    lecture.attachments = await fetchLectureAttachments(lecture.id);
+    try {
+      lecture.attachments = await fetchLectureAttachments(lecture.id);
+    } catch (err) {
+      console.error(`خطأ في جلب مرفقات الدرس ${lecture.id}:`, err);
+      lecture.attachments = [];
+    }
   }
 };
 
 const toggleDropdown = (lectureId: number) => {
   openDropdown.value = openDropdown.value === lectureId ? null : lectureId;
-  openAttachmentsDropdown.value = null;
+  if (openDropdown.value !== lectureId) {
+    openAttachmentsDropdown.value = null; // Close attachments dropdown when main dropdown is closed
+  }
 };
 
 const toggleUnitDropdown = () => {
@@ -1235,8 +1247,55 @@ const toggleUnitDropdown = () => {
 };
 
 const toggleAttachmentsDropdown = (lectureId: number) => {
-  openAttachmentsDropdown.value = openAttachmentsDropdown.value === lectureId ? null : lectureId;
-  openDropdown.value = null;
+  if (openAttachmentsDropdown.value === lectureId) {
+    openAttachmentsDropdown.value = null;
+  } else {
+    openAttachmentsDropdown.value = lectureId;
+    openDropdown.value = null; // أغلق القائمة الرئيسية
+  }
+};
+
+const handleClickOutside = (event: MouseEvent) => {
+  // Handle unit-dropdown
+  const unitDropdown = document.getElementById('unit-dropdown');
+  const unitButton = document.querySelector('[aria-controls="unit-dropdown"]');
+  if (
+    openUnitDropdown.value &&
+    unitDropdown &&
+    unitButton &&
+    !unitDropdown.contains(event.target as Node) &&
+    !unitButton.contains(event.target as Node)
+  ) {
+    openUnitDropdown.value = false;
+  }
+
+  // Handle lecture dropdowns for all lectures
+  lectures.value.forEach((lecture) => {
+    const lectureDropdown = document.getElementById(`dropdown-${lecture.id}`);
+    const lectureButton = document.querySelector(`[aria-controls="dropdown-${lecture.id}"]`);
+    if (
+      openDropdown.value === lecture.id &&
+      lectureDropdown &&
+      lectureButton &&
+      !lectureDropdown.contains(event.target as Node) &&
+      !lectureButton.contains(event.target as Node)
+    ) {
+      openDropdown.value = null;
+    }
+
+    // Handle attachments dropdown
+    const attachmentsDropdown = document.getElementById(`attachments-dropdown-${lecture.id}`);
+    const attachmentsButton = document.querySelector(`[aria-controls="dropdown-${lecture.id}"]`);
+    if (
+      openAttachmentsDropdown.value === lecture.id &&
+      attachmentsDropdown &&
+      attachmentsButton &&
+      !attachmentsDropdown.contains(event.target as Node) &&
+      !attachmentsButton.contains(event.target as Node)
+    ) {
+      openAttachmentsDropdown.value = null;
+    }
+  });
 };
 
 const openDeleteCourseModal = (course: Course) => {
@@ -1244,7 +1303,7 @@ const openDeleteCourseModal = (course: Course) => {
   showDeleteCourseModal.value = true;
 };
 
-const handleDeleteCource = async(courseId: number)=>{
+const handleDeleteCource = async (courseId: number) => {
   try {
     await confirmDeleteCourse(courseId);
     courses.value = await fetchCourses();
@@ -1259,7 +1318,7 @@ const handleDeleteCource = async(courseId: number)=>{
     console.log(err);
     showToastMessage('error', 'حدث خطأ أثناء حذف الكورس');
   }
-}
+};
 
 const openEditCourseModal = async (course: Course) => {
   form.value = {
@@ -1306,13 +1365,13 @@ const openDeleteUnitModal = (unit: Unit) => {
 };
 
 const openAddLectureModal = () => {
-  form.value = { 
-    lecttTitle: '', 
-    unit_id: selectedUnit.value?.id || 0, 
-    teacher_id: 0, 
+  form.value = {
+    lecttTitle: '',
+    unit_id: selectedUnit.value?.id || 0,
+    teacher_id: 0,
     course_id: selectedCourse.value?.id || 0,
-    lecttContent: '', 
-    videoUrl: '' 
+    lecttContent: '',
+    videoUrl: ''
   };
   selectedFiles.value = [];
   isEditMode.value = false;
@@ -1374,10 +1433,41 @@ const getAttachmentIcon = (path: string) => {
   return 'fa-solid fa-file';
 };
 
-const openAttachment = (path: string) => {
-  const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
-  const fullUrl = `${baseUrl}/storage/${path}`;
-  window.open(fullUrl, '_blank');
+const downloadAttachment = async (path: string) => {
+  try {
+    const response = await api.get(`file/submission/${path}`);
+    const fileURL = response.data.data;
+    if (!fileURL) {
+      showToastMessage('error', 'الرابط غير موجود');
+      return;
+    }
+    const fileResponse = await api.get(fileURL.replace('http://31.97.32.199/api/', ''), {
+      responseType: 'blob',
+    });
+    const blob = new Blob([fileResponse.data]);
+    const blobUrl = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = blobUrl;
+    const filename = path.split('/').pop() || 'downloaded-file';
+    link.setAttribute('download', filename);
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.URL.revokeObjectURL(blobUrl);
+  } catch (err) {
+    console.error('خطأ أثناء تحميل الملف:', err);
+    showToastMessage('error', 'حدث خطأ أثناء تحميل الملف');
+  }
+};
+
+const handleDeleteLecture = async (lectureId: any) => {
+  try {
+    await confirmDeleteLecture(lectureId);
+    closeModal();
+    lectures.value = await fetchLectures(units.value[0].unitName);
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 const closeModal = () => {
@@ -1425,6 +1515,11 @@ onMounted(async () => {
       await fetchAllAttachments();
     }
   }
+  document.addEventListener('click', handleClickOutside);
+});
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside);
 });
 </script>
 
@@ -1484,10 +1579,7 @@ button:not(.unit-button):focus {
 }
 
 /* Dropdown Animation */
-@keyframes dropdown {
-  from { opacity: 0; transform: translateY(-8px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+
 .animate-dropdown {
   animation: dropdown 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -1542,10 +1634,6 @@ button:not(.unit-button):focus {
   .md\\:justify-between {
     justify-content: flex-start;
   }
-  .animate-dropdown {
-    width: 36vw;
-    right: -0.5rem;
-  }
 }
 
 @media (max-width: 480px) {
@@ -1560,10 +1648,6 @@ button:not(.unit-button):focus {
   .text-xs {
     font-size: 0.65rem;
   }
-  .animate-dropdown {
-    width: 45vw;
-    right: -0.25rem;
-  }
 }
 
 @media (min-width: 640px) and (max-width: 768px) {
@@ -1575,5 +1659,17 @@ button:not(.unit-button):focus {
     padding: 0.75rem 1rem;
     font-size: 0.875rem;
   }
+}
+
+.relative {
+  position: relative;
+  z-index: 20; /* Ensure the parent container has a high enough z-index */
+}
+
+/* Ensure the animate-dropdown class does not hide the dropdown */
+.animate-dropdown {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
 }
 </style>

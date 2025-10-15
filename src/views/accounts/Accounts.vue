@@ -26,7 +26,7 @@
               <input
                 id="search"
                 type="search"
-                required
+                v-model="searchQuery"
                 placeholder="البحث"
                 class="w-full border text-xs sm:text-sm border-gray-300 rounded-md px-3 py-1.5 pr-10 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent transition"
               />
@@ -42,12 +42,6 @@
 
     <!-- Buttons -->
     <div class="flex items-center gap-2 w-full sm:w-auto">
-      <button
-        class="flex items-center gap-1 bg-gray-200 hover:bg-gray-300 text-gray-800 text-xs sm:text-sm font-medium px-4 sm:px-5 py-2 rounded shadow transition w-full sm:w-auto"
-      >
-        <font-awesome-icon icon="fa-solid fa-filter" class="w-3 h-3 sm:w-4 sm:h-4" />
-        فلترة
-      </button>
       <button 
         @click="openModal(false)"
         type="button"
@@ -97,7 +91,7 @@
       <tbody>
         <tr v-for="(account, index) in accounts" :key="account.id" class="odd:bg-white odd:dark:bg-gray-800 even:bg-gray-50 even:dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600 transition-all duration-200 hover:bg-blue-50 dark:hover:bg-gray-600">
           <th scope="row" class="px-2 sm:px-3 py-2 font-medium text-gray-900 dark:text-white whitespace-nowrap">
-            {{ (currentPage - 1) * perPage + index + 1 }}
+            {{  index + 1 }}
           </th>
           <td class="px-2 sm:px-3 py-2">
             {{ account.procedure_type === 1 ? 'قبض' : account.procedure_type === 2 ? 'دفع' : account.procedure_type }}
@@ -132,7 +126,7 @@
             <div
               v-show="activeUserOptions === index"
               ref="dropdownMenu"
-              class="z-10 mt-2 fixed bg-white dark:bg-gray-700 rounded-lg shadow-xl w-36 sm:w-44 divide-y divide-gray-100 dark:divide-gray-600 transform transition-all duration-300 scale-95 origin-top"
+              class="fixed left-0 z-10 mt-2 bg-white dark:bg-gray-700 rounded-lg shadow-xl w-40 divide-y divide-gray-100 dark:divide-gray-600 transform transition-all duration-300 scale-95 origin-top"
             >
               <ul class="py-1 sm:py-2 text-xs sm:text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownMenuIconButton">
                 <li>
@@ -437,16 +431,31 @@
 </template>
 
 <script setup>
-  // ---------------------- Imports ----------------------
-  import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
-  import api from '../../services/api'
-  import { useToast } from '../../composables/useToast.ts'
-  import { formatCurrency } from "../../../utils/format";
-  // ---------------------- Toast ----------------------
-  const { showToastMessage } = useToast()
+// ---------------------- Imports ----------------------
+import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
+import api from '../../services/api'
+import { useToast } from '../../composables/useToast.ts'
+import { formatCurrency } from "../../utils/format.ts";
 
-  // ---------------------- Form ----------------------
-  const form = ref({
+// ---------------------- Toast ----------------------
+const { showToastMessage } = useToast()
+
+// ---------------------- Form ----------------------
+const form = ref({
+  procedure_type: '',
+  amount: '',
+  note: '',
+  status: false,
+  accountable_id: 5,
+  accountable_type: "App\\Models\\Student",
+  accountable_name: null
+})
+
+const accountId = ref(null)
+const isEditMode = ref(false)
+
+const resetForm = () => {
+  form.value = {
     procedure_type: '',
     amount: '',
     note: '',
@@ -454,102 +463,98 @@
     accountable_id: 5,
     accountable_type: "App\\Models\\Student",
     accountable_name: null
-  })
-
-  const accountId = ref(null)
-  const isEditMode = ref(false)
-
-  const resetForm = () => {
-    form.value = {
-      procedure_type: '',
-      amount: '',
-      note: '',
-      status: false,
-      accountable_id: 5,
-      accountable_type: "App\\Models\\Student",
-      accountable_name: null
-    }
-    accountId.value = null
-    isEditMode.value = false
   }
+  accountId.value = null
+  isEditMode.value = false
+}
 
-  const startEdit = (account) => {
-    form.value = {
-      procedure_type: account.procedure_type,
-      amount: account.amount,
-      note: account.note,
-      status: Boolean(account.status),
-      accountable_id: account.accountable_id,
-      accountable_type: account.accountable_type,
-      accountable_name: account.accountable_name
-    }
-    accountId.value = account.id
-    openModal(true)
+const startEdit = (account) => {
+  form.value = {
+    procedure_type: account.procedure_type,
+    amount: account.amount,
+    note: account.note,
+    status: Boolean(account.status),
+    accountable_id: account.accountable_id,
+    accountable_type: account.accountable_type,
+    accountable_name: account.accountable_name
   }
+  accountId.value = account.id
+  openModal(true)
+}
 
-  const handleSubmit = async () => {
-    try {
-      const payload = {
-        procedure_type: Number(form.value.procedure_type),
-        accountable_id: Number(form.value.accountable_id),
-        accountable_type: form.value.accountable_type,
-        amount: Number(form.value.amount),
-        note: form.value.note || null,
-        status: !!form.value.status,
-      }
-
-      if (isEditMode.value) {
-        await api.put(`/accounts/${accountId.value}`, payload)
-      } else {
-        await api.post('/accounts', payload)
-      }
-
-      await fetchAccounts(currentPage.value)
-      closeModal()
-      showToastMessage('success', isEditMode.value ? 'تم تعديل السجل بنجاح' : 'تمت إضافة السجل بنجاح')
-      resetForm()
-    } catch (err) {
-      showToastMessage('danger', err.response?.data?.message || 'حدث خطأ أثناء العملية')
-      console.error(err)
+const handleSubmit = async () => {
+  try {
+    const payload = {
+      procedure_type: Number(form.value.procedure_type),
+      accountable_id: Number(form.value.accountable_id),
+      accountable_type: form.value.accountable_type,
+      amount: Number(form.value.amount),
+      note: form.value.note || null,
+      status: !!form.value.status,
     }
-  }
 
-  // ---------------------- Data ----------------------
-  const accounts = ref([])
-  const currentPage = ref(1)
-  const perPage = ref(15)
-  const totalAccounts = ref(0)
-  const meta = ref({})
-  const links = ref({})
-  const isLoading = ref(false)
-
-  const fetchAccounts = async (page = 1) => {
-    isLoading.value = true
-    try {
-      const response = await api.get(`/accounts?page=${page}`)
-      accounts.value = response.data.data
-      meta.value = response.data.meta
-      links.value = response.data.links
-      currentPage.value = response.data.meta.current_page[0] || 1
-      perPage.value = response.data.meta.per_page[0] || 15
-      totalAccounts.value = response.data.meta.total[0] || 0
-    } catch (err) {
-      showToastMessage('danger', 'حدث خطأ أثناء جلب السجلات')
-      console.error(err)
-    } finally {
-      isLoading.value = false
+    if (isEditMode.value) {
+      await api.put(`/accounts/${accountId.value}`, payload)
+    } else {
+      await api.post('/accounts', payload)
     }
+
+    await fetchAccounts(currentPage.value)
+    closeModal()
+    showToastMessage('success', isEditMode.value ? 'تم تعديل السجل بنجاح' : 'تمت إضافة السجل بنجاح')
+    resetForm()
+  } catch (err) {
+    showToastMessage('danger', err.response?.data?.message || 'حدث خطأ أثناء العملية')
+    console.error(err)
+  } finally {
+    fetchAccounts();
   }
+}
+
+// ---------------------- Data ----------------------
+const accounts = ref([])
+const currentPage = ref(1)
+const perPage = ref(15) // Ensure perPage is initialized as an integer
+const totalAccounts = ref(0)
+const meta = ref({})
+const links = ref({})
+const isLoading = ref(false)
+const searchQuery = ref('')
+let searchTimer = null
+
+const fetchAccounts = async (page = 1) => {
+  isLoading.value = true
+  try {
+    const params = {
+      page,
+      per_page: Number(perPage.value), // Explicitly cast to integer
+    }
+    if (searchQuery.value) {
+      params['filter[accountable_name]'] = searchQuery.value
+    }
+    const response = await api.get('/accounts', { params })
+    accounts.value = response.data.data
+    meta.value = response.data.meta
+    links.value = response.data.links
+    currentPage.value = response.data.meta.current_page || 1
+    perPage.value = Number(response.data.meta.per_page) || 15 // Ensure perPage is updated as an integer
+    totalAccounts.value = response.data.meta.total || 0
+  } catch (err) {
+    showToastMessage('danger', err.response?.data?.message || 'حدث خطأ أثناء جلب السجلات')
+    console.error(err)
+  } finally {
+    isLoading.value = false
+  }
+}
 
 const ACCOUNTABLE_TYPES = [
-  { label: 'طالب',   value: 'App\\Models\\Student',  api: '/students'   },
-  { label: 'مدير موقع',   value: 'App\\Models\\Admin',  api: '/admins'   },
-  { label: 'استاذ',   value: 'App\\Models\\Teacher',  api: '/teachers'   },
+  { label: 'طالب', value: 'App\\Models\\Student', api: '/students' },
+  { label: 'مدير موقع', value: 'App\\Models\\Admin', api: '/admins' },
+  { label: 'استاذ', value: 'App\\Models\\Teacher', api: '/teachers' },
 ]
 
 const accountableOptions = ref([])
 const isLoadingAccountables = ref(false)
-let searchTimer = null
 
 const currentType = () =>
   ACCOUNTABLE_TYPES.find(t => t.value === form.value.accountable_type)
@@ -560,18 +565,16 @@ const loadAccountables = async (search = '') => {
 
   isLoadingAccountables.value = true
   try {
-    const res = await api.get(type.api, { 
-      params: { 
-        'filter[FullName]': search, 
-        per_page: 20 
-      } 
+    const res = await api.get(type.api, {
+      params: {
+        'filter[FullName]': search,
+        per_page: 20
+      }
     })
     const items = res.data?.data ?? res.data ?? []
     accountableOptions.value = items.map((i) => ({
       id: i.id,
-      name:
-        i.FullName || i.name || i.full_name ||
-        `#${i.id}`,
+      name: i.FullName || i.name || i.full_name || `#${i.id}`,
     }))
   } catch (e) {
     showToastMessage('danger', 'تعذر جلب قائمة الأسماء')
@@ -606,78 +609,87 @@ const getAccountableType = (account) => {
   }
 }
 
-  // ---------------------- Pagination ----------------------
-  const changePage = (url) => {
-    if (!url) return
-    const page = new URL(url).searchParams.get('page')
-        console.log(currentPage.value.toString())
+// ---------------------- Search ----------------------
+watch(searchQuery, (newQuery) => {
+  clearTimeout(searchTimer)
+  searchTimer = setTimeout(() => {
+    currentPage.value = 1
+    fetchAccounts(1)
+  }, 300)
+})
 
-    if (page && page !== currentPage.value.toString()) {
-      fetchAccounts(page)
-    }
+// ---------------------- Pagination ----------------------
+const changePage = (url) => {
+  if (!url) return
+  const page = new URL(url).searchParams.get('page')
+  if (page && page !== currentPage.value.toString()) {
+    fetchAccounts(page)
   }
+}
 
-  // ---------------------- Modals ----------------------
-  const showAddEditModal = ref(false)
-  const showDeleteModal = ref(false)
+// ---------------------- Modals ----------------------
+const showAddEditModal = ref(false)
+const showDeleteModal = ref(false)
 
-  const openModal = (editMode = false) => {
-    isEditMode.value = editMode
-    if (!editMode) resetForm()
-    showAddEditModal.value = true
-  }
+const openModal = (editMode = false) => {
+  isEditMode.value = editMode
+  if (!editMode) resetForm()
+  showAddEditModal.value = true
+}
 
-  const closeModal = () => {
-    showAddEditModal.value = false
+const closeModal = () => {
+  showAddEditModal.value = false
+  showDeleteModal.value = false
+}
+
+const confirmDelete = (id) => {
+  accountId.value = id
+  showDeleteModal.value = !!id
+}
+
+const deleteAccount = async () => {
+  if (!accountId.value) return
+  try {
+    await api.delete(`/accounts/${accountId.value}`)
+    await fetchAccounts(currentPage.value)
+    accountId.value = null
     showDeleteModal.value = false
+    showToastMessage('success', 'تم حذف السجل بنجاح')
+  } catch (err) {
+    showToastMessage('danger', 'حدث خطأ أثناء العملية')
+    console.error(err)
+  } finally {
+    fetchAccounts();
   }
+}
 
-  const confirmDelete = (id) => {
-    accountId.value = id
-    showDeleteModal.value = !!id
+// ---------------------- Dropdown Options ----------------------
+const activeUserOptions = ref(null)
+const dropdownButton = ref([])
+const dropdownMenu = ref([])
+
+const toggleUserOptions = (index) => {
+  activeUserOptions.value = activeUserOptions.value === index ? null : index
+}
+
+const handleClickOutside = (event) => {
+  const isInsideAnyDropdown = dropdownMenu.value.some((menu) => menu?.contains(event.target))
+  const isInsideAnyButton = dropdownButton.value.some((btn) => btn?.contains(event.target))
+  if (!isInsideAnyDropdown && !isInsideAnyButton) {
+    activeUserOptions.value = null
   }
+}
 
-  const deleteAccount = async () => {
-    if (!accountId.value) return
-    try {
-      await api.delete(`/accounts/${accountId.value}`)
-      await fetchAccounts(currentPage.value)
-      accountId.value = null
-      showDeleteModal.value = false
-      showToastMessage('success', 'تم حذف السجل بنجاح')
-    } catch (err) {
-      showToastMessage('danger', 'حدث خطأ أثناء العملية')
-      console.error(err)
-    }
-  }
+// ---------------------- Lifecycle ----------------------
+onMounted(() => {
+  window.addEventListener('click', handleClickOutside)
+  fetchAccounts()
+  loadAccountables()
+})
 
-  // ---------------------- Dropdown Options ----------------------
-  const activeUserOptions = ref(null)
-  const dropdownButton = ref([])
-  const dropdownMenu = ref([])
-
-  const toggleUserOptions = (index) => {
-    activeUserOptions.value = activeUserOptions.value === index ? null : index
-  }
-
-  const handleClickOutside = (event) => {
-    const isInsideAnyDropdown = dropdownMenu.value.some(menu => menu?.contains(event.target))
-    const isInsideAnyButton = dropdownButton.value.some(btn => btn?.contains(event.target))
-    if (!isInsideAnyDropdown && !isInsideAnyButton) {
-      activeUserOptions.value = null
-    }
-  }
-
-  // ---------------------- Lifecycle ----------------------
-  onMounted(() => {
-    window.addEventListener('click', handleClickOutside)
-    fetchAccounts()
-    loadAccountables() // ← مهم: حتى يمتلئ سيلكت الأسماء أول مرة
-  })
-
-  onBeforeUnmount(() => {
-    window.removeEventListener('click', handleClickOutside)
-  })
+onBeforeUnmount(() => {
+  window.removeEventListener('click', handleClickOutside)
+})
 </script>
 
 <style scoped>

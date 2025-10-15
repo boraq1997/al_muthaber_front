@@ -580,7 +580,7 @@
 <script setup>
 import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import api from '@/services/api'
-import { formatDateTime } from '../../../utils/DateFormat'
+import { formatDateTime } from '../../utils/DateFormat'
 
 // Refs
 const allCourses = ref([])

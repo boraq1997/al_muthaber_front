@@ -4,7 +4,6 @@
     <div v-if="isLoading" class="text-center py-4">
       <font-awesome-icon icon="fa-solid fa-spinner" class="animate-spin text-purple-600 w-6 h-6" />
     </div>
-
     <!-- Tabs Header -->
     <div v-else class="mb-4 sm:mb-6 border-b-2 border-gray-200 dark:border-gray-700 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
       <!-- Tabs List -->
@@ -20,7 +19,7 @@
           role="presentation"
         >
           <button
-            class="relative inline-block px-3 sm:px-6 py-2 sm:py-3 border-b-2 transition-all duration-300 ease-in-out text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400"
+            class="relative inline-block px-3 sm:px-6 py-2 sm:py-3 border-b-2 transition-all duration-300 ease-in-out text-gray-600 dark:text-gray-600 hover:text-indigo-600 dark:hover:text-indigo-400"
             :id="`tab-${institute.id}`"
             :class="{
               'text-indigo-600 border-indigo-600 dark:text-indigo-400 dark:border-indigo-400': selectedInstitute?.id === institute.id,
@@ -40,7 +39,6 @@
           </button>
         </li>
       </ul>
-
       <button
         @click="openAddInstituteModal"
         class="flex items-center gap-1 focus:outline-none text-white focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-xs sm:text-sm px-3 sm:px-5 py-2 sm:py-2.5"
@@ -51,7 +49,6 @@
         إضافة معهد
       </button>
     </div>
-
     <!-- Tabs Content -->
     <div v-if="!isLoading" id="institute-tab-content" class="space-y-6 sm:space-y-8">
       <div
@@ -91,7 +88,6 @@
             </div>
           </div>
         </div>
-
         <!-- Stages Card -->
         <div class="bg-white/95 dark:bg-gray-900/95 backdrop-blur-lg rounded-2xl p-4 sm:p-6 shadow-lg transition-all duration-500 hover:shadow-xl border border-gray-100/20 dark:border-gray-800/20">
           <div class="flex items-center justify-between mb-4 sm:mb-6">
@@ -108,7 +104,6 @@
               إضافة مرحلة
             </button>
           </div>
-
           <div v-if="stages.length" class="flex flex-col gap-4 sm:gap-6">
             <ul class="flex-column space-y-2 sm:space-y-3 text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400 w-full">
               <li v-for="stage in stages" :key="stage.id">
@@ -126,7 +121,6 @@
                 </button>
               </li>
             </ul>
-
             <div class="p-4 sm:p-6 bg-gray-50/50 dark:bg-gray-800/50 rounded-lg w-full transition-all duration-300 animate-slide-in" style="--animation-delay: 100ms">
               <div v-if="selectedStage">
                 <div class="flex items-center justify-between mb-3 sm:mb-4">
@@ -148,7 +142,7 @@
                       v-if="openStageDropdown"
                       ref="stageDropdownMenu"
                       id="stage-dropdown"
-                      class="absolute right-0 mt-2 w-36 sm:w-40 bg-white dark:bg-gray-900 rounded-lg shadow-lg border border-gray-100/20 dark:border-gray-800/20 z-10 animate-dropdown"
+                      class="absolute left-0 mt-2 w-36 sm:w-40 bg-white dark:bg-gray-900 rounded-lg shadow-lg border border-gray-100/20 dark:border-gray-800/20 z-50 animate-dropdown"
                     >
                       <ul class="py-1 text-xs sm:text-sm text-gray-700 dark:text-gray-200" role="menu">
                         <li role="menuitem">
@@ -182,7 +176,6 @@
                     </div>
                   </div>
                 </div>
-
                 <div v-if="subjects.length" class="space-y-3 sm:space-y-4">
                   <h5 class="text-sm sm:text-base font-semibold text-gray-900 dark:text-white mb-3 sm:mb-4">
                     المواد المرتبطة بالمرحلة
@@ -214,7 +207,7 @@
                             v-if="openSubjectDropdown === subject.id"
                             ref="subjectDropdownMenu"
                             :id="`dropdown-${subject.id}`"
-                            class="absolute right-0 mt-2 w-36 sm:w-40 bg-white dark:bg-gray-900 rounded-lg shadow-lg border border-gray-100/20 dark:border-gray-800/20 z-10 animate-dropdown"
+                            class="absolute left-0 mt-2 w-36 sm:w-40 bg-white dark:bg-gray-900 rounded-lg shadow-lg border border-gray-100/20 dark:border-gray-800/20 z-10 animate-dropdown"
                           >
                             <ul class="py-1 text-xs sm:text-sm text-gray-700 dark:text-gray-200" role="menu">
                               <li role="menuitem">
@@ -277,7 +270,7 @@
                                 v-if="openUnitDropdown === unit.id"
                                 ref="unitDropdownMenu"
                                 :id="`dropdown-unit-${unit.id}`"
-                                class="absolute right-0 mt-2 w-36 sm:w-40 bg-white dark:bg-gray-900 rounded-lg shadow-lg border border-gray-100/20 dark:border-gray-800/20 z-10 animate-dropdown"
+                                class="absolute left-0 mt-2 w-36 sm:w-40 bg-white dark:bg-gray-900 rounded-lg shadow-lg border border-gray-100/20 dark:border-gray-800/20 z-10 animate-dropdown"
                               >
                                 <ul class="py-1 text-xs sm:text-sm text-gray-700 dark:text-gray-200" role="menu">
                                   <li role="menuitem">
@@ -328,7 +321,6 @@
         لا توجد معاهد متاحة.
       </div>
     </div>
-
     <!-- Delete Institute Modal -->
     <div v-if="showDeleteInstituteModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
       <div class="relative w-full max-w-full sm:max-w-md mx-2 sm:mx-4">
@@ -376,7 +368,6 @@
         </div>
       </div>
     </div>
-
     <!-- Add/Edit Institute Modal -->
     <div v-if="showAddEditInstituteModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
       <div class="relative w-full max-w-full sm:max-w-md mx-2 sm:mx-4">
@@ -430,7 +421,6 @@
         </div>
       </div>
     </div>
-
     <!-- Add/Edit Stage Modal -->
     <div v-if="showAddEditStageModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
       <div class="relative w-full max-w-full sm:max-w-md mx-2 sm:mx-4">
@@ -484,7 +474,6 @@
         </div>
       </div>
     </div>
-
     <!-- Delete Stage Modal -->
     <div v-if="showDeleteStageModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
       <div class="relative w-full max-w-full sm:max-w-md mx-2 sm:mx-4">
@@ -532,7 +521,6 @@
         </div>
       </div>
     </div>
-
     <!-- Add/Edit Subject Modal -->
     <div v-if="showAddEditSubjectModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
       <div class="relative w-full max-w-full sm:max-w-md mx-2 sm:mx-4">
@@ -602,7 +590,6 @@
         </div>
       </div>
     </div>
-
     <!-- Delete Subject Modal -->
     <div v-if="showDeleteSubjectModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
       <div class="relative w-full max-w-full sm:max-w-md mx-2 sm:mx-4">
@@ -650,7 +637,6 @@
         </div>
       </div>
     </div>
-
     <!-- Add/Edit Unit Modal -->
     <div v-if="showAddEditUnitModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
       <div class="relative w-full max-w-full sm:max-w-md mx-2 sm:mx-4">
@@ -720,7 +706,6 @@
         </div>
       </div>
     </div>
-
     <!-- Delete Unit Modal -->
     <div v-if="showDeleteUnitModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
       <div class="relative w-full max-w-full sm:max-w-md mx-2 sm:mx-4">
@@ -771,513 +756,570 @@
   </div>
 </template>
 
-<script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import api from '@/services/api'
-import { useToast } from '@/composables/useToast'
+<script setup lang="ts">
+import { ref, onMounted, onBeforeUnmount, nextTick } from 'vue';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import api from '@/services/api';
+import { useToast } from '@/composables/useToast';
+
+// Interfaces
+interface Institute {
+  id: number;
+  name: string;
+}
+
+interface Stage {
+  id: number;
+  name: string;
+}
+
+interface Subject {
+  id: number;
+  subjectName: string;
+  stage_id: number;
+  units?: Unit[];
+}
+
+interface Unit {
+  id: number;
+  unitName: string;
+  subject_id: number;
+}
+
+interface FormData {
+  name?: string;
+  subjectName?: string;
+  stage_id?: string | number;
+  unitName?: string;
+  subject_id?: string | number;
+  id?: string | number;
+}
 
 // Toast
-const { showToastMessage } = useToast()
+const { showToastMessage } = useToast();
 
 // Data
-const institutes = ref([])
-const selectedInstitute = ref(null)
-const stages = ref([])
-const selectedStage = ref(null)
-const subjects = ref([])
-const isLoading = ref(false)
+const institutes = ref<Institute[]>([]);
+const selectedInstitute = ref<Institute | null>(null);
+const stages = ref<Stage[]>([]);
+const selectedStage = ref<Stage | null>(null);
+const subjects = ref<Subject[]>([]);
+const isLoading = ref<boolean>(false);
 
 // Dropdowns
-const openStageDropdown = ref(false)
-const openSubjectDropdown = ref(null)
-const openUnitDropdown = ref(null)
-const stageDropdownButton = ref(null)
-const stageDropdownMenu = ref(null)
-const subjectDropdownButton = ref([])
-const subjectDropdownMenu = ref([])
-const unitDropdownButton = ref([])
-const unitDropdownMenu = ref([])
+const openStageDropdown = ref<boolean>(false);
+const openSubjectDropdown = ref<number | null>(null);
+const openUnitDropdown = ref<number | null>(null);
+const stageDropdownButton = ref<HTMLElement | null>(null);
+const stageDropdownMenu = ref<HTMLElement | null>(null);
+const subjectDropdownButton = ref<HTMLElement[]>([]);
+const subjectDropdownMenu = ref<HTMLElement[]>([]);
+const unitDropdownButton = ref<HTMLElement[]>([]);
+const unitDropdownMenu = ref<HTMLElement[]>([]);
 
 // Modals
-const showDeleteInstituteModal = ref(false)
-const showAddEditInstituteModal = ref(false)
-const showAddEditStageModal = ref(false)
-const showDeleteStageModal = ref(false)
-const showAddEditSubjectModal = ref(false)
-const showDeleteSubjectModal = ref(false)
-const showAddEditUnitModal = ref(false)
-const showDeleteUnitModal = ref(false)
-const isEditMode = ref(false)
-const form = ref({
-  name: '',
-  subjectName: '',
-  stage_id: '',
-  unitName: '',
-  subject_id: '',
-  id: ''
-})
+const showDeleteInstituteModal = ref<boolean>(false);
+const showAddEditInstituteModal = ref<boolean>(false);
+const showAddEditStageModal = ref<boolean>(false);
+const showDeleteStageModal = ref<boolean>(false);
+const showAddEditSubjectModal = ref<boolean>(false);
+const showDeleteSubjectModal = ref<boolean>(false);
+const showAddEditUnitModal = ref<boolean>(false);
+const showDeleteUnitModal = ref<boolean>(false);
+const isEditMode = ref<boolean>(false);
+const form = ref<FormData>({});
 
 // API Functions
-const fetchInstitutes = async () => {
-  isLoading.value = true
+const fetchInstitutes = async (): Promise<Institute[]> => {
+  isLoading.value = true;
   try {
-    const response = await api.get('/institutes')
-    return response.data.data || []
-  } catch (err) {
-    showToastMessage('danger', 'حدث خطأ أثناء جلب المعاهد')
-    console.error('خطأ في جلب المعاهد:', err)
-    return []
+    const response = await api.get('/institutes');
+    return response.data.data || [];
+  } catch (err: any) {
+    showToastMessage('error', 'حدث خطأ أثناء جلب المعاهد');
+    console.error('خطأ في جلب المعاهد:', err);
+    return [];
   } finally {
-    isLoading.value = false
+    isLoading.value = false;
   }
-}
+};
 
-const submitInstitute = async (data, isEditMode) => {
+const submitInstitute = async (data: FormData, isEditMode: boolean): Promise<void> => {
   try {
     if (isEditMode) {
-      await api.put(`/institutes/${data.id}`, { name: data.name })
-      showToastMessage('success', 'تم تعديل المعهد بنجاح')
+      await api.put(`/institutes/${data.id}`, { name: data.name });
+      showToastMessage('success', 'تم تعديل المعهد بنجاح');
     } else {
-      await api.post('/institutes', { name: data.name })
-      showToastMessage('success', 'تم إضافة المعهد بنجاح')
+      await api.post('/institutes', { name: data.name });
+      showToastMessage('success', 'تم إضافة المعهد بنجاح');
     }
-  } catch (err) {
-    showToastMessage('danger', err.response?.data?.message || 'حدث خطأ أثناء إرسال المعهد')
-    console.error('خطأ في إرسال المعهد:', err)
-    throw err
+  } catch (err: any) {
+    showToastMessage('error', err.response?.data?.message || 'حدث خطأ أثناء إرسال المعهد');
+    console.error('خطأ في إرسال المعهد:', err);
+    throw err;
   }
-}
+};
 
-const confirmDeleteInstitute = async (id) => {
+const confirmDeleteInstitute = async (id: number): Promise<void> => {
   try {
-    await api.delete(`/institutes/${id}`)
-    showToastMessage('success', 'تم حذف المعهد بنجاح')
-  } catch (err) {
-    showToastMessage('danger', err.response?.data?.message || 'حدث خطأ أثناء حذف المعهد')
-    console.error('خطأ في حذف المعهد:', err)
-    throw err
+    await api.delete(`/institutes/${id}`);
+    showToastMessage('success', 'تم حذف المعهد بنجاح');
+  } catch (err: any) {
+    showToastMessage('error', err.response?.data?.message || 'حدث خطأ أثناء حذف المعهد');
+    console.error('خطأ في حذف المعهد:', err);
+    throw err;
   }
-}
+};
 
-const fetchStages = async () => {
-  isLoading.value = true
+const fetchStages = async (): Promise<Stage[]> => {
+  isLoading.value = true;
   try {
-    const response = await api.get('/stages')
-    return response.data.data || []
-  } catch (err) {
-    showToastMessage('danger', 'حدث خطأ أثناء جلب المراحل')
-    console.error('خطأ في جلب المراحل:', err)
-    return []
+    const response = await api.get('/stages');
+    return response.data.data || [];
+  } catch (err: any) {
+    showToastMessage('error', 'حدث خطأ أثناء جلب المراحل');
+    console.error('خطأ في جلب المراحل:', err);
+    return [];
   } finally {
-    isLoading.value = false
+    isLoading.value = false;
   }
-}
+};
 
-const submitStage = async (data, isEditMode) => {
+const submitStage = async (data: FormData, isEditMode: boolean): Promise<void> => {
   try {
     if (isEditMode) {
-      await api.put(`/stages/${data.id}`, { name: data.name })
-      showToastMessage('success', 'تم تعديل المرحلة بنجاح')
+      await api.put(`/stages/${data.id}`, { name: data.name });
+      showToastMessage('success', 'تم تعديل المرحلة بنجاح');
     } else {
-      await api.post('/stages', { name: data.name })
-      showToastMessage('success', 'تم إضافة المرحلة بنجاح')
+      await api.post('/stages', { name: data.name });
+      showToastMessage('success', 'تم إضافة المرحلة بنجاح');
     }
-  } catch (err) {
-    showToastMessage('danger', err.response?.data?.message || 'حدث خطأ أثناء إرسال المرحلة')
-    console.error('خطأ في إرسال المرحلة:', err)
-    throw err
+  } catch (err: any) {
+    showToastMessage('error', err.response?.data?.message || 'حدث خطأ أثناء إرسال المرحلة');
+    console.error('خطأ في إرسال المرحلة:', err);
+    throw err;
   }
-}
+};
 
-const confirmDeleteStage = async (id) => {
+const confirmDeleteStage = async (id: number): Promise<void> => {
   try {
-    await api.delete(`/stages/${id}`)
-    showToastMessage('success', 'تم حذف المرحلة بنجاح')
-  } catch (err) {
-    showToastMessage('danger', err.response?.data?.message || 'حدث خطأ أثناء حذف المرحلة')
-    console.error('خطأ في حذف المرحلة:', err)
-    throw err
+    await api.delete(`/stages/${id}`);
+    showToastMessage('success', 'تم حذف المرحلة بنجاح');
+  } catch (err: any) {
+    showToastMessage('error', err.response?.data?.message || 'حدث خطأ أثناء حذف المرحلة');
+    console.error('خطأ في حذف المرحلة:', err);
+    throw err;
   }
-}
+};
 
-const fetchSubjects = async (stageId) => {
-  isLoading.value = true
+const fetchSubjects = async (stageId: number): Promise<Subject[]> => {
+  isLoading.value = true;
   try {
-    const response = await api.get(`/subjects?stage_id=${stageId}`)
-    const subjects = response.data.data || []
+    const response = await api.get(`/subjects?stage_id=${stageId}`);
+    const subjects: Subject[] = response.data.data || [];
     if (subjects.length) {
       const unitsPromises = subjects.map(subject =>
         api.get(`/units?filter[subject.id]=${subject.id}`).then(res => ({
           ...subject,
           units: res.data.data || []
         }))
-      )
-      return await Promise.all(unitsPromises)
+      );
+      return await Promise.all(unitsPromises);
     }
-    return subjects
-  } catch (err) {
-    showToastMessage('danger', 'حدث خطأ أثناء جلب المواد')
-    console.error('خطأ في جلب المواد:', err)
-    return []
+    return subjects;
+  } catch (err: any) {
+    showToastMessage('error', 'حدث خطأ أثناء جلب المواد');
+    console.error('خطأ في جلب المواد:', err);
+    return [];
   } finally {
-    isLoading.value = false
+    isLoading.value = false;
   }
-}
+};
 
-const submitSubject = async (data, isEditMode) => {
+const submitSubject = async (data: FormData, isEditMode: boolean): Promise<void> => {
   try {
     if (isEditMode) {
-      await api.put(`/subjects/${data.id}`, { subjectName: data.subjectName, stage_id: data.stage_id })
-      showToastMessage('success', 'تم تعديل المادة بنجاح')
+      await api.put(`/subjects/${data.id}`, { subjectName: data.subjectName, stage_id: data.stage_id });
+      showToastMessage('success', 'تم تعديل المادة بنجاح');
     } else {
-      await api.post('/subjects', { subjectName: data.subjectName, stage_id: data.stage_id })
-      showToastMessage('success', 'تم إضافة المادة بنجاح')
+      await api.post('/subjects', { subjectName: data.subjectName, stage_id: data.stage_id });
+      showToastMessage('success', 'تم إضافة المادة بنجاح');
     }
-  } catch (err) {
-    showToastMessage('danger', err.response?.data?.message || 'حدث خطأ أثناء إرسال المادة')
-    console.error('خطأ في إرسال المادة:', err)
-    throw err
+  } catch (err: any) {
+    showToastMessage('error', err.response?.data?.message || 'حدث خطأ أثناء إرسال المادة');
+    console.error('خطأ في إرسال المادة:', err);
+    throw err;
   }
-}
+};
 
-const confirmDeleteSubject = async (id) => {
+const confirmDeleteSubject = async (id: number): Promise<void> => {
   try {
-    await api.delete(`/subjects/${id}`)
-    showToastMessage('success', 'تم حذف المادة بنجاح')
-  } catch (err) {
-    showToastMessage('danger', err.response?.data?.message || 'حدث خطأ أثناء حذف المادة')
-    console.error('خطأ في حذف المادة:', err)
-    throw err
+    await api.delete(`/subjects/${id}`);
+    showToastMessage('success', 'تم حذف المادة بنجاح');
+  } catch (err: any) {
+    showToastMessage('error', err.response?.data?.message || 'حدث خطأ أثناء حذف المادة');
+    console.error('خطأ في حذف المادة:', err);
+    throw err;
   }
-}
+};
 
-const submitUnit = async (data, isEditMode) => {
+const submitUnit = async (data: FormData, isEditMode: boolean): Promise<void> => {
   try {
     if (isEditMode) {
-      await api.put(`/units/${data.id}`, { unitName: data.unitName, subject_id: data.subject_id })
-      showToastMessage('success', 'تم تعديل الفصل بنجاح')
+      await api.put(`/units/${data.id}`, { unitName: data.unitName, subject_id: data.subject_id });
+      showToastMessage('success', 'تم تعديل الفصل بنجاح');
     } else {
-      await api.post('/units', { unitName: data.unitName, subject_id: data.subject_id })
-      showToastMessage('success', 'تم إضافة الفصل بنجاح')
+      await api.post('/units', { unitName: data.unitName, subject_id: data.subject_id });
+      showToastMessage('success', 'تم إضافة الفصل بنجاح');
     }
-  } catch (err) {
-    showToastMessage('danger', err.response?.data?.message || 'حدث خطأ أثناء إرسال الفصل')
-    console.error('خطأ في إرسال الفصل:', err)
-    throw err
+  } catch (err: any) {
+    showToastMessage('error', err.response?.data?.message || 'حدث خطأ أثناء إرسال الفصل');
+    console.error('خطأ في إرسال الفصل:', err);
+    throw err;
   }
-}
+};
 
-const confirmDeleteUnit = async (id) => {
+const confirmDeleteUnit = async (id: number): Promise<void> => {
   try {
-    await api.delete(`/units/${id}`)
-    showToastMessage('success', 'تم حذف الفصل بنجاح')
-  } catch (err) {
-    showToastMessage('danger', err.response?.data?.message || 'حدث خطأ أثناء حذف الفصل')
-    console.error('خطأ في حذف الفصل:', err)
-    throw err
+    await api.delete(`/units/${id}`);
+    showToastMessage('success', 'تم حذف الفصل بنجاح');
+  } catch (err: any) {
+    showToastMessage('error', err.response?.data?.message || 'حدث خطأ أثناء حذف الفصل');
+    console.error('خطأ في حذف الفصل:', err);
+    throw err;
   }
-}
+};
 
 // Data Fetching
-const fetchData = async () => {
-  isLoading.value = true
+const fetchData = async (): Promise<void> => {
+  isLoading.value = true;
   try {
-    const [institutesData, stagesData] = await Promise.all([fetchInstitutes(), fetchStages()])
-    institutes.value = institutesData
-    stages.value = stagesData
+    const [institutesData, stagesData] = await Promise.all([fetchInstitutes(), fetchStages()]);
+    institutes.value = institutesData;
+    stages.value = stagesData;
     if (institutes.value.length > 0) {
-      selectedInstitute.value = institutes.value[0]
+      selectedInstitute.value = institutes.value[0];
       if (stages.value.length > 0) {
-        selectedStage.value = stages.value[0]
-        subjects.value = await fetchSubjects(stages.value[0].id)
+        selectedStage.value = stages.value[0];
+        subjects.value = await fetchSubjects(stages.value[0].id);
       } else {
-        subjects.value = []
+        subjects.value = [];
       }
     } else {
-      selectedInstitute.value = null
-      selectedStage.value = null
-      subjects.value = []
+      selectedInstitute.value = null;
+      selectedStage.value = null;
+      subjects.value = [];
     }
-  } catch (err) {
-    showToastMessage('danger', 'حدث خطأ أثناء جلب البيانات')
-    console.error('خطأ في جلب البيانات:', err)
+    // Wait for DOM update to ensure refs are assigned
+    await nextTick();
+    console.log('stageDropdownButton after fetch:', stageDropdownButton.value);
+    console.log('stageDropdownMenu after fetch:', stageDropdownMenu.value);
+  } catch (err: any) {
+    showToastMessage('error', 'حدث خطأ أثناء جلب البيانات');
+    console.error('خطأ في جلب البيانات:', err);
   } finally {
-    isLoading.value = false
+    isLoading.value = false;
   }
-}
+};
 
 // Selection Handlers
-const selectInstitute = async (institute) => {
-  selectedInstitute.value = institute
-  selectedStage.value = stages.value.length ? stages.value[0] : null
-  openStageDropdown.value = false
-  openSubjectDropdown.value = null
-  openUnitDropdown.value = null
+const selectInstitute = async (institute: Institute): Promise<void> => {
+  selectedInstitute.value = institute;
+  selectedStage.value = stages.value.length ? stages.value[0] : null;
+  openStageDropdown.value = false;
+  openSubjectDropdown.value = null;
+  openUnitDropdown.value = null;
   if (selectedStage.value) {
-    subjects.value = await fetchSubjects(selectedStage.value.id)
+    subjects.value = await fetchSubjects(selectedStage.value.id);
   } else {
-    subjects.value = []
+    subjects.value = [];
   }
-}
+  // Wait for DOM update
+  await nextTick();
+  console.log('stageDropdownButton after selectInstitute:', stageDropdownButton.value);
+  console.log('stageDropdownMenu after selectInstitute:', stageDropdownMenu.value);
+};
 
-const selectStage = async (stage) => {
-  selectedStage.value = stage
-  openStageDropdown.value = false
-  openSubjectDropdown.value = null
-  openUnitDropdown.value = null
-  subjects.value = await fetchSubjects(stage.id)
-}
+const selectStage = async (stage: Stage): Promise<void> => {
+  selectedStage.value = stage;
+  openStageDropdown.value = false;
+  openSubjectDropdown.value = null;
+  openUnitDropdown.value = null;
+  subjects.value = await fetchSubjects(stage.id);
+  // Wait for DOM update
+  await nextTick();
+  console.log('stageDropdownButton after selectStage:', stageDropdownButton.value);
+  console.log('stageDropdownMenu after selectStage:', stageDropdownMenu.value);
+};
 
 // Dropdown Handlers
-const toggleStageDropdown = () => {
-  openStageDropdown.value = !openStageDropdown.value
-  openSubjectDropdown.value = null
-  openUnitDropdown.value = null
-}
-
-const toggleSubjectDropdown = (subjectId) => {
-  openSubjectDropdown.value = openSubjectDropdown.value === subjectId ? null : subjectId
-  openStageDropdown.value = false
-  openUnitDropdown.value = null
-}
-
-const toggleUnitDropdown = (unitId) => {
-  openUnitDropdown.value = openUnitDropdown.value === unitId ? null : unitId
-  openStageDropdown.value = false
-  openSubjectDropdown.value = null
-}
-
-const handleClickOutside = (event) => {
-  const isInsideStageDropdown = stageDropdownMenu.value?.contains(event.target)
-  const isInsideStageButton = stageDropdownButton.value?.contains(event.target)
-  const isInsideSubjectDropdown = subjectDropdownMenu.value.some(menu => menu?.contains(event.target))
-  const isInsideSubjectButton = subjectDropdownButton.value.some(btn => btn?.contains(event.target))
-  const isInsideUnitDropdown = unitDropdownMenu.value.some(menu => menu?.contains(event.target))
-  const isInsideUnitButton = unitDropdownButton.value.some(btn => btn?.contains(event.target))
-
-  if (!isInsideStageDropdown && !isInsideStageButton) {
-    openStageDropdown.value = false
+const toggleStageDropdown = async (): Promise<void> => {
+  openStageDropdown.value = !openStageDropdown.value;
+  console.log('openStageDropdown:', openStageDropdown.value);
+  openSubjectDropdown.value = null;
+  openUnitDropdown.value = null;
+  // Wait for DOM update to ensure stageDropdownMenu is available
+  if (openStageDropdown.value) {
+    await nextTick();
+    console.log('stageDropdownMenu after toggle:', stageDropdownMenu.value);
   }
-  if (!isInsideSubjectDropdown && !isInsideSubjectButton) {
-    openSubjectDropdown.value = null
+};
+
+const toggleSubjectDropdown = (subjectId: number): void => {
+  openSubjectDropdown.value = openSubjectDropdown.value === subjectId ? null : subjectId;
+  openStageDropdown.value = false;
+  openUnitDropdown.value = null;
+};
+
+const toggleUnitDropdown = (unitId: number): void => {
+  openUnitDropdown.value = openUnitDropdown.value === unitId ? null : unitId;
+  openStageDropdown.value = false;
+  openSubjectDropdown.value = null;
+};
+
+const handleClickOutside = (event: MouseEvent): void => {
+  // Stage dropdown
+  if (openStageDropdown.value) {
+    const isInsideStageDropdown = stageDropdownMenu.value && stageDropdownMenu.value.contains(event.target as Node);
+    const isInsideStageButton = stageDropdownButton.value && stageDropdownButton.value.contains(event.target as Node);
+    if (!isInsideStageDropdown && !isInsideStageButton) {
+      openStageDropdown.value = false;
+      console.log('Closed stage dropdown due to outside click');
+    }
   }
-  if (!isInsideUnitDropdown && !isInsideUnitButton) {
-    openUnitDropdown.value = null
+
+  // Subject dropdowns
+  if (openSubjectDropdown.value) {
+    const isInsideSubjectDropdown = subjectDropdownMenu.value.some(menu => menu?.contains(event.target as Node));
+    const isInsideSubjectButton = subjectDropdownButton.value.some(btn => btn?.contains(event.target as Node));
+    if (!isInsideSubjectDropdown && !isInsideSubjectButton) {
+      openSubjectDropdown.value = null;
+      console.log('Closed subject dropdown due to outside click');
+    }
   }
-}
+
+  // Unit dropdowns
+  if (openUnitDropdown.value) {
+    const isInsideUnitDropdown = unitDropdownMenu.value.some(menu => menu?.contains(event.target as Node));
+    const isInsideUnitButton = unitDropdownButton.value.some(btn => btn?.contains(event.target as Node));
+    if (!isInsideUnitDropdown && !isInsideUnitButton) {
+      openUnitDropdown.value = null;
+      console.log('Closed unit dropdown due to outside click');
+    }
+  }
+};
 
 // Modal Handlers
-const openDeleteInstituteModal = (institute) => {
-  form.value = { name: institute.name, id: institute.id }
-  showDeleteInstituteModal.value = true
-}
+const openDeleteInstituteModal = (institute: Institute): void => {
+  form.value = { name: institute.name, id: institute.id };
+  showDeleteInstituteModal.value = true;
+};
 
-const openEditInstituteModal = (institute) => {
-  form.value = { name: institute.name, id: institute.id }
-  isEditMode.value = true
-  showAddEditInstituteModal.value = true
-}
+const openEditInstituteModal = (institute: Institute): void => {
+  form.value = { name: institute.name, id: institute.id };
+  isEditMode.value = true;
+  showAddEditInstituteModal.value = true;
+};
 
-const openAddInstituteModal = () => {
-  form.value = { name: '' }
-  isEditMode.value = false
-  showAddEditInstituteModal.value = true
-}
+const openAddInstituteModal = (): void => {
+  form.value = { name: '' };
+  isEditMode.value = false;
+  showAddEditInstituteModal.value = true;
+};
 
-const openAddStageModal = () => {
-  form.value = { name: '' }
-  isEditMode.value = false
-  showAddEditStageModal.value = true
-}
+const openAddStageModal = (): void => {
+  form.value = { name: '' };
+  isEditMode.value = false;
+  showAddEditStageModal.value = true;
+};
 
-const openEditStageModal = (stage) => {
-  form.value = { name: stage.name, id: stage.id }
-  isEditMode.value = true
-  showAddEditStageModal.value = true
-}
+const openEditStageModal = (stage: Stage): void => {
+  form.value = { name: stage.name, id: stage.id };
+  isEditMode.value = true;
+  showAddEditStageModal.value = true;
+};
 
-const openDeleteStageModal = (stage) => {
-  form.value = { name: stage.name, id: stage.id }
-  showDeleteStageModal.value = true
-}
+const openDeleteStageModal = (stage: Stage): void => {
+  form.value = { name: stage.name, id: stage.id };
+  showDeleteStageModal.value = true;
+};
 
-const openAddSubjectModal = () => {
-  form.value = { subjectName: '', stage_id: selectedStage.value?.id || '' }
-  isEditMode.value = false
-  showAddEditSubjectModal.value = true
-}
+const openAddSubjectModal = (): void => {
+  form.value = { subjectName: '', stage_id: selectedStage.value?.id || '' };
+  isEditMode.value = false;
+  showAddEditSubjectModal.value = true;
+};
 
-const openEditSubjectModal = (subject) => {
-  form.value = { subjectName: subject.subjectName, stage_id: subject.stage_id, id: subject.id }
-  isEditMode.value = true
-  showAddEditSubjectModal.value = true
-}
+const openEditSubjectModal = (subject: Subject): void => {
+  form.value = { subjectName: subject.subjectName, stage_id: subject.stage_id, id: subject.id };
+  isEditMode.value = true;
+  showAddEditSubjectModal.value = true;
+};
 
-const openDeleteSubjectModal = (subject) => {
-  form.value = { subjectName: subject.subjectName, id: subject.id }
-  showDeleteSubjectModal.value = true
-}
+const openDeleteSubjectModal = (subject: Subject): void => {
+  form.value = { subjectName: subject.subjectName, id: subject.id };
+  showDeleteSubjectModal.value = true;
+};
 
-const openAddUnitModal = (subject) => {
-  form.value = { unitName: '', subject_id: subject.id }
-  isEditMode.value = false
-  showAddEditUnitModal.value = true
-}
+const openAddUnitModal = (subject: Subject): void => {
+  form.value = { unitName: '', subject_id: subject.id };
+  isEditMode.value = false;
+  showAddEditUnitModal.value = true;
+};
 
-const openEditUnitModal = (unit) => {
-  form.value = { unitName: unit.unitName, subject_id: unit.subject_id, id: unit.id }
-  isEditMode.value = true
-  showAddEditUnitModal.value = true
-}
+const openEditUnitModal = (unit: Unit): void => {
+  form.value = { unitName: unit.unitName, subject_id: unit.subject_id, id: unit.id };
+  isEditMode.value = true;
+  showAddEditUnitModal.value = true;
+};
 
-const openDeleteUnitModal = (unit) => {
-  form.value = { unitName: unit.unitName, id: unit.id }
-  showDeleteUnitModal.value = true
-}
+const openDeleteUnitModal = (unit: Unit): void => {
+  form.value = { unitName: unit.unitName, id: unit.id };
+  showDeleteUnitModal.value = true;
+};
 
-const handleSubmitInstitute = async () => {
-  if (!form.value.name.trim()) {
-    showToastMessage('danger', 'يرجى إدخال اسم المعهد')
-    return
+const closeModal = (): void => {
+  showDeleteInstituteModal.value = false;
+  showAddEditInstituteModal.value = false;
+  showAddEditStageModal.value = false;
+  showDeleteStageModal.value = false;
+  showAddEditSubjectModal.value = false;
+  showDeleteSubjectModal.value = false;
+  showAddEditUnitModal.value = false;
+  showDeleteUnitModal.value = false;
+  form.value = {};
+  isEditMode.value = false;
+};
+
+const handleSubmitInstitute = async (): Promise<void> => {
+  if (!form.value.name?.trim()) {
+    showToastMessage('error', 'يرجى إدخال اسم المعهد');
+    return;
   }
   try {
-    await submitInstitute(form.value, isEditMode.value)
-    showAddEditInstituteModal.value = false
-    form.value = {}
-    await fetchData()
+    await submitInstitute(form.value, isEditMode.value);
+    showAddEditInstituteModal.value = false;
+    form.value = {};
+    await fetchData();
   } catch (err) {
     // Error handled in submitInstitute
   }
-}
+};
 
-const handleConfirmDeleteInstitute = async () => {
+const handleConfirmDeleteInstitute = async (): Promise<void> => {
   try {
-    await confirmDeleteInstitute(form.value.id)
-    showDeleteInstituteModal.value = false
-    form.value = {}
-    await fetchData()
+    await confirmDeleteInstitute(Number(form.value.id));
+    showDeleteInstituteModal.value = false;
+    form.value = {};
+    await fetchData();
   } catch (err) {
     // Error handled in confirmDeleteInstitute
   }
-}
+};
 
-const handleSubmitStage = async () => {
-  if (!form.value.name.trim()) {
-    showToastMessage('danger', 'يرجى إدخال اسم المرحلة')
-    return
+const handleSubmitStage = async (): Promise<void> => {
+  if (!form.value.name?.trim()) {
+    showToastMessage('error', 'يرجى إدخال اسم المرحلة');
+    return;
   }
   try {
-    await submitStage(form.value, isEditMode.value)
-    showAddEditStageModal.value = false
-    form.value = {}
-    await fetchData()
+    await submitStage(form.value, isEditMode.value);
+    showAddEditStageModal.value = false;
+    form.value = {};
+    await fetchData();
   } catch (err) {
     // Error handled in submitStage
   }
-}
+};
 
-const handleConfirmDeleteStage = async () => {
+const handleConfirmDeleteStage = async (): Promise<void> => {
   try {
-    await confirmDeleteStage(form.value.id)
-    showDeleteStageModal.value = false
-    form.value = {}
-    await fetchData()
+    await confirmDeleteStage(Number(form.value.id));
+    showDeleteStageModal.value = false;
+    form.value = {};
+    await fetchData();
   } catch (err) {
     // Error handled in confirmDeleteStage
   }
-}
+};
 
-const handleSubmitSubject = async () => {
-  if (!form.value.subjectName.trim()) {
-    showToastMessage('danger', 'يرجى إدخال اسم المادة')
-    return
+const handleSubmitSubject = async (): Promise<void> => {
+  if (!form.value.subjectName?.trim()) {
+    showToastMessage('error', 'يرجى إدخال اسم المادة');
+    return;
   }
   if (!form.value.stage_id) {
-    showToastMessage('danger', 'يرجى اختيار المرحلة')
-    return
+    showToastMessage('error', 'يرجى اختيار المرحلة');
+    return;
   }
   try {
-    await submitSubject(form.value, isEditMode.value)
-    showAddEditSubjectModal.value = false
-    form.value = {}
+    await submitSubject(form.value, isEditMode.value);
+    showAddEditSubjectModal.value = false;
+    form.value = {};
     if (selectedStage.value) {
-      subjects.value = await fetchSubjects(selectedStage.value.id)
+      subjects.value = await fetchSubjects(selectedStage.value.id);
     }
   } catch (err) {
     // Error handled in submitSubject
   }
-}
+};
 
-const handleConfirmDeleteSubject = async () => {
+const handleConfirmDeleteSubject = async (): Promise<void> => {
   try {
-    await confirmDeleteSubject(form.value.id)
-    showDeleteSubjectModal.value = false
-    form.value = {}
+    await confirmDeleteSubject(Number(form.value.id));
+    showDeleteSubjectModal.value = false;
+    form.value = {};
     if (selectedStage.value) {
-      subjects.value = await fetchSubjects(selectedStage.value.id)
+      subjects.value = await fetchSubjects(selectedStage.value.id);
     }
   } catch (err) {
     // Error handled in confirmDeleteSubject
   }
-}
+};
 
-const handleSubmitUnit = async () => {
-  if (!form.value.unitName.trim()) {
-    showToastMessage('danger', 'يرجى إدخال اسم الفصل')
-    return
+const handleSubmitUnit = async (): Promise<void> => {
+  if (!form.value.unitName?.trim()) {
+    showToastMessage('error', 'يرجى إدخال اسم الفصل');
+    return;
   }
   if (!form.value.subject_id) {
-    showToastMessage('danger', 'يرجى اختيار المادة')
-    return
+    showToastMessage('error', 'يرجى اختيار المادة');
+    return;
   }
   try {
-    await submitUnit(form.value, isEditMode.value)
-    showAddEditUnitModal.value = false
-    form.value = {}
+    await submitUnit(form.value, isEditMode.value);
+    showAddEditUnitModal.value = false;
+    form.value = {};
     if (selectedStage.value) {
-      subjects.value = await fetchSubjects(selectedStage.value.id)
+      subjects.value = await fetchSubjects(selectedStage.value.id);
     }
   } catch (err) {
     // Error handled in submitUnit
   }
-}
+};
 
-const handleConfirmDeleteUnit = async () => {
+const handleConfirmDeleteUnit = async (): Promise<void> => {
   try {
-    await confirmDeleteUnit(form.value.id)
-    showDeleteUnitModal.value = false
-    form.value = {}
+    await confirmDeleteUnit(Number(form.value.id));
+    showDeleteUnitModal.value = false;
+    form.value = {};
     if (selectedStage.value) {
-      subjects.value = await fetchSubjects(selectedStage.value.id)
+      subjects.value = await fetchSubjects(selectedStage.value.id);
     }
   } catch (err) {
     // Error handled in confirmDeleteUnit
   }
-}
-
-const closeModal = () => {
-  showDeleteInstituteModal.value = false
-  showAddEditInstituteModal.value = false
-  showAddEditStageModal.value = false
-  showDeleteStageModal.value = false
-  showAddEditSubjectModal.value = false
-  showDeleteSubjectModal.value = false
-  showAddEditUnitModal.value = false
-  showDeleteUnitModal.value = false
-  form.value = { name: '', subjectName: '', stage_id: '', unitName: '', subject_id: '', id: '' }
-  isEditMode.value = false
-}
+};
 
 // Lifecycle Hooks
-onMounted(() => {
-  fetchData()
-  document.addEventListener('click', handleClickOutside)
-})
+onMounted(async () => {
+  await fetchData();
+  document.addEventListener('click', handleClickOutside);
+});
 
 onBeforeUnmount(() => {
-  document.removeEventListener('click', handleClickOutside)
-})
+  document.removeEventListener('click', handleClickOutside);
+});
 </script>
 
 <style scoped>

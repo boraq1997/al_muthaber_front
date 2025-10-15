@@ -8,275 +8,274 @@
     <p class="text-gray-500 dark:text-gray-400">لا توجد دورات مسجلة حاليًا.</p>
   </div>
 
-  <div
-    v-for="courseGroup in groupedCourses"
-    :key="courseGroup.course.id"
-    class="w-full bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 mb-6"
-  >
-    <!-- تبويبات -->
-    <ul
-      class="flex flex-wrap text-sm font-medium text-center text-gray-500 border-b border-gray-200 rounded-t-lg bg-gray-50 dark:border-gray-700 dark:text-gray-400 dark:bg-gray-800"
-      :id="`tabs-${courseGroup.course.id}`"
-      role="tablist"
+  <div class="flex flex-wrap">
+    <div
+      v-for="courseGroup in groupedCourses"
+      :key="courseGroup.course.id"
+      class="w-full bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 mb-6"
     >
-      <li class="me-2">
-        <button
-          :id="`course-tab-${courseGroup.course.id}`"
-          :data-tabs-target="`#course-${courseGroup.course.id}`"
-          type="button"
-          role="tab"
-          :aria-controls="`course-${courseGroup.course.id}`"
-          aria-selected="true"
-          class="inline-block p-4 text-blue-600 rounded-ss-lg hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-blue-500"
-        >
-          الدورة
-        </button>
-      </li>
-      <li class="me-2">
-        <button
-          :id="`students-tab-${courseGroup.course.id}`"
-          :data-tabs-target="`#students-${courseGroup.course.id}`"
-          type="button"
-          role="tab"
-          :aria-controls="`students-${courseGroup.course.id}`"
-          aria-selected="false"
-          class="inline-block p-4 hover:text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-300"
-        >
-          الطلاب <span class="bg-red-100 text-red-100 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-red-500 dark:text-red-100">{{ courseGroup.students.length }}</span>
-        </button>
-      </li>
-    </ul>
-
-    <!-- المحتوى -->
-    <div :id="`tabs-content-${courseGroup.course.id}`">
-      <!-- Tab الدورة -->
-      <div
-        class="hidden p-4 bg-white rounded-lg md:p-8 dark:bg-gray-800"
-        :id="`course-${courseGroup.course.id}`"
-        role="tabpanel"
-        :aria-labelledby="`course-tab-${courseGroup.course.id}`"
+      <!-- تبويبات -->
+      <ul
+        class="flex flex-wrap text-sm font-medium text-center text-gray-500 border-b border-gray-200 rounded-t-lg bg-gray-50 dark:border-gray-700 dark:text-gray-400 dark:bg-gray-800"
+        :id="`tabs-${courseGroup.course.id}`"
+        role="tablist"
       >
-        <h2 class="text-lg sm:text-2xl md:text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight mb-5">
-            {{ courseGroup.course.CourseName }}
-        </h2>
+        <li class="me-2">
+          <button
+            :id="`course-tab-${courseGroup.course.id}`"
+            :data-tabs-target="`#course-${courseGroup.course.id}`"
+            type="button"
+            role="tab"
+            :aria-controls="`course-${courseGroup.course.id}`"
+            aria-selected="true"
+            class="inline-block p-4 text-blue-600 rounded-ss-lg hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-blue-500"
+          >
+            الدورة
+          </button>
+        </li>
+        <li class="me-2">
+          <button
+            :id="`students-tab-${courseGroup.course.id}`"
+            :data-tabs-target="`#students-${courseGroup.course.id}`"
+            type="button"
+            role="tab"
+            :aria-controls="`students-${courseGroup.course.id}`"
+            aria-selected="false"
+            class="inline-block p-4 hover:text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-300"
+          >
+            الطلاب <span class="bg-red-100 text-red-100 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-red-500 dark:text-red-100">{{ courseGroup.students.length }}</span>
+          </button>
+        </li>
+      </ul>
 
-        <div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 text-xs sm:text-sm text-gray-600 dark:text-gray-200">
-          <!-- بيانات الدورة -->
-          <div class="flex items-center space-x-2 rtl:space-x-reverse hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200">
-            <span class="font-semibold text-gray-800 dark:text-gray-100">
+      <!-- المحتوى -->
+      <div :id="`tabs-content-${courseGroup.course.id}`">
+        <!-- Tab الدورة -->
+        <div
+          class="hidden p-4 bg-white rounded-lg md:p-8 dark:bg-gray-800"
+          :id="`course-${courseGroup.course.id}`"
+          role="tabpanel"
+          :aria-labelledby="`course-tab-${courseGroup.course.id}`"
+        >
+          <h2 class="text-lg sm:text-2xl md:text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight mb-5">
+            {{ courseGroup.course.CourseName }}
+          </h2>
+
+          <div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 text-xs sm:text-sm text-gray-600 dark:text-gray-200">
+            <!-- بيانات الدورة -->
+            <div class="flex items-center space-x-2 rtl:space-x-reverse hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200">
+              <span class="font-semibold text-gray-800 dark:text-gray-100">
                 <font-awesome-icon icon="fa-solid fa-book" class="text-indigo-500 dark:text-indigo-400 w-4 h-4 sm:w-5 sm:h-5 transform transition-transform duration-300 hover:scale-110" />
                 المادة:
-            </span> {{ courseGroup.course.subject_name }}
-          </div>
-          <div class="hidden sm:block h-4 sm:h-6 border-l border-gray-200 dark:border-gray-700"></div>
-          <div class="flex items-center space-x-2 rtl:space-x-reverse hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200">
-            <span class="font-semibold text-gray-800 dark:text-gray-100">
+              </span> {{ courseGroup.course.subjectName }}
+            </div>
+            <div class="hidden sm:block h-4 sm:h-6 border-l border-gray-200 dark:border-gray-700"></div>
+            <div class="flex items-center space-x-2 rtl:space-x-reverse hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200">
+              <span class="font-semibold text-gray-800 dark:text-gray-100">
                 <font-awesome-icon icon="fa-solid fa-building" class="text-indigo-500 dark:text-indigo-400 w-4 h-4 sm:w-5 sm:h-5 transform transition-transform duration-300 hover:scale-110" />
                 المعهد:
-            </span> {{ courseGroup.course.institute_name }}
-          </div>
-          <div class="hidden sm:block h-4 sm:h-6 border-l border-gray-200 dark:border-gray-700"></div>
-          <div class="flex items-center space-x-2 rtl:space-x-reverse hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200">
-            <span class="font-semibold text-gray-800 dark:text-gray-100">
+              </span> {{ courseGroup.course.instituteName }}
+            </div>
+            <div class="hidden sm:block h-4 sm:h-6 border-l border-gray-200 dark:border-gray-700"></div>
+            <div class="flex items-center space-x-2 rtl:space-x-reverse hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200">
+              <span class="font-semibold text-gray-800 dark:text-gray-100">
                 <font-awesome-icon icon="fa-solid fa-chalkboard-teacher" class="text-indigo-500 dark:text-indigo-400 w-4 h-4 sm:w-5 sm:h-5 transform transition-transform duration-300 hover:scale-110" />
                 المدرس:
-            </span> {{ courseGroup.course.teacher_name }}
-          </div>
-          <div class="hidden sm:block h-4 sm:h-6 border-l border-gray-200 dark:border-gray-700"></div>
-          <div class="flex items-center space-x-2 rtl:space-x-reverse hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200">
-            <span class="font-semibold text-gray-800 dark:text-gray-100">
+              </span> {{ courseGroup.course.teacherName }}
+            </div>
+            <div class="hidden sm:block h-4 sm:h-6 border-l border-gray-200 dark:border-gray-700"></div>
+            <div class="flex items-center space-x-2 rtl:space-x-reverse hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200">
+              <span class="font-semibold text-gray-800 dark:text-gray-100">
                 <font-awesome-icon icon="fa-solid fa-calendar" class="text-indigo-500 dark:text-indigo-400 w-4 h-4 sm:w-5 sm:h-5 transform transition-transform duration-300 hover:scale-110" />
                 التاريخ:
-            </span> {{ courseGroup.course.Course_date }}
-          </div>
-          <div class="hidden sm:block h-4 sm:h-6 border-l border-gray-200 dark:border-gray-700"></div>
-          <div class="flex items-center space-x-2 rtl:space-x-reverse hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200">
-            <span class="font-semibold text-gray-800 dark:text-gray-100">
+              </span> {{ courseGroup.course.Course_date || 'غير محدد' }}
+            </div>
+            <div class="hidden sm:block h-4 sm:h-6 border-l border-gray-200 dark:border-gray-700"></div>
+            <div class="flex items-center space-x-2 rtl:space-x-reverse hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200">
+              <span class="font-semibold text-gray-800 dark:text-gray-100">
                 <font-awesome-icon icon="fa-solid fa-money-bill" class="text-indigo-500 dark:text-indigo-400 w-4 h-4 sm:w-5 sm:h-5 transform transition-transform duration-300 hover:scale-110" />
                 السعر:
-            </span> {{ formatCurrency(courseGroup.course.Course_price) }} دينار
+              </span> {{ formatCurrency(courseGroup.course.Course_price || 0) }} دينار
+            </div>
           </div>
         </div>
-      </div>
 
-      <!-- Tab الطلاب -->
-      <div
-        class="hidden p-4 bg-white rounded-lg md:p-8 dark:bg-gray-800"
-        :id="`students-${courseGroup.course.id}`"
-        role="tabpanel"
-        :aria-labelledby="`students-tab-${courseGroup.course.id}`"
-      >
-        <h2 class="mb-3 text-lg font-bold text-gray-900 dark:text-white">قائمة الطلاب المنتمين الى الدورة</h2>
-        
-        <div class="flex items-center gap-2 flex-wrap">
-          <button
-            @click="openAddEditStudentModal(false, courseGroup.course.id)"
-            type="button"
-            class="flex items-center gap-1 mb-3 text-white focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-xs sm:text-sm px-3 sm:px-5 py-2 sm:py-2.5"
-            style="background: #6f225e"
-          >
-            <font-awesome-icon icon="fa-plus" class="w-3 h-3 sm:w-4 sm:h-4" />
-            إضافة طالب
-          </button>
-        </div>
+        <!-- Tab الطلاب -->
+        <div
+          class="hidden p-4 bg-white rounded-lg md:p-8 dark:bg-gray-800"
+          :id="`students-${courseGroup.course.id}`"
+          role="tabpanel"
+          :aria-labelledby="`students-tab-${courseGroup.course.id}`"
+        >
+          <h2 class="mb-3 text-lg font-bold text-gray-900 dark:text-white">قائمة الطلاب المنتمين الى الدورة</h2>
 
-        <div class="relative overflow-x-auto shadow-lg rounded-xl">
-           <table class="w-full text-xs sm:text-sm text-left rtl:text-right text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800">
+          <div class="flex items-center gap-2 flex-wrap">
+            <button
+              @click="openAddEditStudentModal(false, undefined, courseGroup.course.id)"
+              type="button"
+              class="flex items-center gap-1 mb-3 text-white focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-xs sm:text-sm px-3 sm:px-5 py-2 sm:py-2.5"
+              style="background: #6f225e"
+            >
+              <font-awesome-icon icon="fa-plus" class="w-3 h-3 sm:w-4 sm:h-4" />
+              إضافة طالب
+            </button>
+          </div>
+
+          <div class="relative overflow-x-auto shadow-lg rounded-xl">
+            <table class="w-full text-xs sm:text-sm text-left rtl:text-right text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800">
               <thead class="text-xs text-white uppercase" style="background: #6f225e">
-                  <tr>
-                      <th scope="col" class="px-2 sm:px-3 py-2 font-semibold">#</th>
-                      <th scope="col" class="px-2 sm:px-3 py-2 font-semibold">اسم الطالب</th>
-                      <th scope="col" class="px-2 sm:px-3 py-2 font-semibold">رقم الهاتف</th>
-                      <th scope="col" class="px-2 sm:px-3 py-2 font-semibold">رقم هاتف ولي الامر</th>
-                      <th scope="col" class="px-2 sm:px-3 py-2 font-semibold">العنوان</th>
-                      <th scope="col" class="px-2 sm:px-3 py-2 font-semibold">الاجراءات</th>
-                  </tr>
+                <tr>
+                  <th scope="col" class="px-2 sm:px-3 py-2 font-semibold">#</th>
+                  <th scope="col" class="px-2 sm:px-3 py-2 font-semibold">اسم الطالب</th>
+                  <th scope="col" class="px-2 sm:px-3 py-2 font-semibold">رقم الهاتف</th>
+                  <th scope="col" class="px-2 sm:px-3 py-2 font-semibold">رقم هاتف ولي الامر</th>
+                  <th scope="col" class="px-2 sm:px-3 py-2 font-semibold">العنوان</th>
+                  <th scope="col" class="px-2 sm:px-3 py-2 font-semibold">الاجراءات</th>
+                </tr>
               </thead>
               <tbody>
-                  <tr
-                    class="odd:bg-white odd:dark:bg-gray-800 even:bg-gray-50 even:dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600 transition-all duration-200 hover:bg-blue-50 dark:hover:bg-gray-600"
-                    v-for="(student, index) in courseGroup.students"
-                    :key="student.relation_id"
-                  >
-                      <th scope="row" class="px-2 sm:px-3 py-2 font-medium text-gray-900 dark:text-white whitespace-nowrap">{{ index + 1 }}</th>
-                      <td class="px-2 sm:px-3 py-2">{{ student.FullName }}</td>
-                      <td class="px-2 sm:px-3 py-2">{{ student.phoneNumber }}</td>
-                      <td class="px-2 sm:px-3 py-2">{{ student.Parent_phone_number }}</td>
-                      <td class="px-2 sm:px-3 py-2">{{ student.Address }}</td>
-                      <td class="px-2 sm:px-3 py-2">
-                        
-                        <div class="relative inline-block">
-                          <button
-                            @click="toggleUserOptions(student.relation_id, $event)"
-                            class="inline-flex items-center p-1.5 sm:p-2 text-sm font-medium text-gray-900 bg-white dark:bg-gray-700 rounded-full hover:bg-blue-100 dark:hover:bg-gray-600 focus:ring-4 focus:ring-blue-200 dark:focus:ring-gray-500 transition-colors duration-200"
-                          >
-                            <font-awesome-icon icon="fa-solid fa-ellipsis" class="text-gray-600 dark:text-gray-300 w-3 h-3 sm:w-4 sm:h-4" />
-                          </button>
+                <tr v-if="courseGroup.students.length === 0">
+                  <td colspan="6" class="text-center py-4">لا يوجد طلاب مسجلين في هذه الدورة بعد.</td>
+                </tr>
+                <tr
+                  v-else
+                  class="odd:bg-white odd:dark:bg-gray-800 even:bg-gray-50 even:dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600 transition-all duration-200 hover:bg-blue-50 dark:hover:bg-gray-600"
+                  v-for="(student, index) in courseGroup.students"
+                  :key="student.relation_id"
+                >
+                  <th scope="row" class="px-2 sm:px-3 py-2 font-medium text-gray-900 dark:text-white whitespace-nowrap">{{ index + 1 }}</th>
+                  <td class="px-2 sm:px-3 py-2">{{ student.FullName }}</td>
+                  <td class="px-2 sm:px-3 py-2">{{ student.phoneNumber }}</td>
+                  <td class="px-2 sm:px-3 py-2">{{ student.Parent_phone_number }}</td>
+                  <td class="px-2 sm:px-3 py-2">{{ student.Address }}</td>
+                  <td class="px-2 sm:px-3 py-2">
+                    <div class="relative inline-block">
+                      <button
+                        @click="toggleUserOptions(student.relation_id, $event)"
+                        class="inline-flex items-center p-1.5 sm:p-2 text-sm font-medium text-gray-900 bg-white dark:bg-gray-700 rounded-full hover:bg-blue-100 dark:hover:bg-gray-600 focus:ring-4 focus:ring-blue-200 dark:focus:ring-gray-500 transition-colors duration-200"
+                      >
+                        <font-awesome-icon icon="fa-solid fa-ellipsis" class="text-gray-600 dark:text-gray-300 w-3 h-3 sm:w-4 sm:h-4" />
+                      </button>
 
-                          <div
-                            v-show="activeUserOptions === student.relation_id"
-                            :style="dropdownStyle"
-                            class="z-[9999] fixed bg-white dark:bg-gray-700 rounded-lg shadow-xl w-36 sm:w-44 divide-y divide-gray-100 dark:divide-gray-600 transition-all duration-200"
-                          >
-                            <ul class="py-2 text-xs sm:text-sm text-gray-700 dark:text-gray-200">
-                              <li>
-                                <a
-                                  href="#"
-                                  @click.prevent="startEdit(student, courseGroup.course.id)"
-                                  class="flex items-center px-3 sm:px-4 py-1.5 sm:py-2 hover:bg-blue-100 dark:hover:bg-gray-600 dark:hover:text-white transition-colors duration-200"
-                                >
-                                  <font-awesome-icon icon="fa-solid fa-user-edit" class="mr-1 sm:mr-2 w-3 h-3 sm:w-4 sm:h-4" />
-                                  تعديل
-                                </a>
-                              </li>
-                              <li>
-                                <a
-                                  href="#"
-                                  @click.prevent="openDeleteModal(student.relation_id)"
-                                  class="flex items-center px-3 sm:px-4 py-1.5 sm:py-2 hover:bg-red-100 dark:hover:bg-red-600 dark:hover:text-white text-red-600 dark:text-red-400 transition-colors duration-200"
-                                >
-                                  <font-awesome-icon icon="fa-solid fa-trash" class="mr-1 sm:mr-2 w-3 h-3 sm:w-4 sm:h-4" />
-                                  حذف
-                                </a>
-                              </li>
-                            </ul>
-                          </div>
-                        </div>
-
-                      </td>
-                  </tr>
+                      <div
+                        v-show="activeUserOptions === student.relation_id"
+                        :style="dropdownStyle"
+                        class="z-[9999] fixed bg-white dark:bg-gray-700 rounded-lg shadow-xl w-36 sm:w-44 divide-y divide-gray-100 dark:divide-gray-600 transition-all duration-200"
+                      >
+                        <ul class="py-2 text-xs sm:text-sm text-gray-700 dark:text-gray-200">
+                          <li>
+                            <a
+                              href="#"
+                              @click.prevent="openAddEditStudentModal(true, student, courseGroup.course.id)"
+                              class="flex items-center px-3 sm:px-4 py-1.5 sm:py-2 hover:bg-blue-100 dark:hover:bg-gray-600 dark:hover:text-white transition-colors duration-200"
+                            >
+                              <font-awesome-icon icon="fa-solid fa-user-edit" class="mr-1 sm:mr-2 w-3 h-3 sm:w-4 sm:h-4" />
+                              تعديل
+                            </a>
+                          </li>
+                          <li>
+                            <a
+                              href="#"
+                              @click.prevent="openDeleteModal(student.relation_id)"
+                              class="flex items-center px-3 sm:px-4 py-1.5 sm:py-2 hover:bg-red-100 dark:hover:bg-red-600 dark:hover:text-white text-red-600 dark:text-red-400 transition-colors duration-200"
+                            >
+                              <font-awesome-icon icon="fa-solid fa-trash" class="mr-1 sm:mr-2 w-3 h-3 sm:w-4 sm:h-4" />
+                              حذف
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
               </tbody>
-          </table>
-        </div>
+            </table>
+          </div>
 
-        <!-- Modal -->
-        <div v-if="openAddEditStudentModalVisible" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div class="relative w-full max-w-full sm:max-w-md md:max-w-lg lg:max-w-2xl mx-4">
-            <div class="relative bg-white dark:bg-gray-800 rounded-xl shadow-2xl overflow-hidden border border-gray-200 dark:border-gray-700 transition-all duration-300 transform scale-95 animate-fade-in">
-              <div class="flex items-center justify-between p-4 sm:p-5 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
-                <h3 class="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">
-                  <font-awesome-icon icon="fa-solid fa-user-shield" class="mr-2 text-blue-500 w-4 h-4 sm:w-5 sm:h-5" />
-                  {{ isEditMode ? 'تعديل' : 'إضافة جديد' }}
-                </h3>
-                <button @click="closeModal" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
-                  <font-awesome-icon icon="fa-solid fa-times" class="text-base sm:text-lg" />
-                </button>
-              </div>
+          <!-- Modal -->
+          <div v-if="openAddEditStudentModalVisible" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+            <div class="relative w-full max-w-full sm:max-w-md md:max-w-lg lg:max-w-2xl mx-4">
+              <div class="relative bg-white dark:bg-gray-800 rounded-xl shadow-2xl overflow-hidden border border-gray-200 dark:border-gray-700 transition-all duration-300 transform scale-95 animate-fade-in">
+                <div class="flex items-center justify-between p-4 sm:p-5 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
+                  <h3 class="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">
+                    <font-awesome-icon icon="fa-solid fa-user-shield" class="mr-2 text-blue-500 w-4 h-4 sm:w-5 sm:h-5" />
+                    {{ isEditMode ? 'تعديل' : 'إضافة جديد' }}
+                  </h3>
+                  <button @click="closeModal" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
+                    <font-awesome-icon icon="fa-solid fa-times" class="text-base sm:text-lg" />
+                  </button>
+                </div>
 
-              <div class="p-4 sm:p-6 space-y-4 max-h-[80vh] sm:max-h-[70vh] overflow-y-auto">
-                <form @submit.prevent="handleSubmit">
-
+                <div class="p-4 sm:p-6 space-y-4 max-h-[80vh] sm:max-h-[70vh] overflow-y-auto">
+                  <form @submit.prevent="handleSubmit">
                     <div>
                       <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">الدورة</label>
-                        <div class="relative">
-                          <select
-                            v-model="form.course_id"
-                            id="course_id"
-                            class="w-full pl-3 pr-10 py-1.5 sm:py-2 text-xs sm:text-base border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200"
-                          >
-                            <option value="" disabled>اختر الدورة</option>
-                            <option v-for="course in courses" :key="course.id" :value="course.id">{{ course.CourseName }}</option>
-                          </select>
+                      <div class="relative">
+                        <select
+                          v-model="form.course_id"
+                          class="w-full pl-3 pr-10 py-1.5 sm:py-2 text-xs sm:text-base border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200"
+                        >
+                          <option value="" disabled>اختر الدورة</option>
+                          <option v-for="course in courses" :key="course.id" :value="Number(course.id)">{{ course.CourseName }}</option>
+                        </select>
                         <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                           <font-awesome-icon icon="fa-school" class="text-gray-400 w-3 h-3 sm:w-4 sm:h-4" />
                         </div>
                       </div>
                       <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">اختر الدورة</p>
-                    </div>  
+                    </div>
 
                     <div>
                       <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">الطالب</label>
-                        <div class="relative">
-                          <select
-                            v-model="form.student_id"
-                            id="student_id"
-                            class="w-full pl-3 pr-10 py-1.5 sm:py-2 text-xs sm:text-base border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200"
-                          >
-                            <option value="" disabled>اختر الطالب</option>
-                            <option v-for="student in students" :key="student.id" :value="student.id">{{ student.FullName }}</option>
-                          </select>
+                      <div class="relative">
+                        <select
+                          v-model="form.student_id"
+                          class="w-full pl-3 pr-10 py-1.5 sm:py-2 text-xs sm:text-base border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200"
+                        >
+                          <option value="" disabled>اختر الطالب</option>
+                          <option v-for="student in students" :key="student.id" :value="Number(student.id)">{{ student.FullName }}</option>
+                        </select>
                         <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                           <font-awesome-icon icon="fa-school" class="text-gray-400 w-3 h-3 sm:w-4 sm:h-4" />
                         </div>
                       </div>
                       <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">اختر الطالب</p>
                     </div>
+                  </form>
+                </div>
 
-                </form>
+                <div class="flex items-center justify-end px-3 py-2 bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700">
+                  <button
+                    @click="closeModal"
+                    type="button"
+                    class="px-3 ml-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 mr-2 sm:mr-3"
+                  >إلغاء</button>
+                  <button
+                    @click="handleSubmit"
+                    type="button"
+                    class="px-4 sm:px-6 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-purple-600 rounded-md shadow-sm hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                  >
+                    <font-awesome-icon icon="fa-solid fa-save" class="mr-1 sm:mr-2 w-3 h-3 sm:w-4 sm:h-4" />
+                    {{ isEditMode ? 'حفظ التعديلات' : 'إضافة جديد' }}
+                  </button>
+                </div>
               </div>
-
-              <div class="flex items-center justify-end px-3 py-2 bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700">
-                <button
-                  @click="closeModal"
-                  type="button"
-                  class="px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 mr-2 sm:mr-3"
-                >إلغاء</button>
-                <button
-                  @click="handleSubmit"
-                  type="button"
-                  class="px-4 sm:px-6 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-purple-600 rounded-md shadow-sm hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                >
-                  <font-awesome-icon icon="fa-solid fa-save" class="mr-1 sm:mr-2 w-3 h-3 sm:w-4 sm:h-4" />
-                  {{ isEditMode ? 'حفظ التعديلات' : 'إضافة جديد' }}
-                </button>
-              </div>
-
             </div>
           </div>
-        </div>
 
+        </div>
       </div>
     </div>
   </div>
 
-<div v-if="showDeleteModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+  <div v-if="showDeleteModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
     <div class="relative w-full max-w-full sm:max-w-md mx-4">
       <div class="relative bg-white dark:bg-gray-800 rounded-xl shadow-2xl overflow-hidden border border-gray-200 dark:border-gray-700 transition-all duration-300 transform scale-95 animate-fade-in">
         <!-- Modal Header -->
         <div class="flex items-center justify-between p-4 sm:p-5 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
           <h3 class="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">
             <font-awesome-icon icon="fa-solid fa-user-shield" class="mr-2 text-red-500 w-4 h-4 sm:w-5 sm:h-5" />
-            تأكيد حذف المدير
+            تأكيد حذف الطالب
           </h3>
           <button @click="closeModal" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
             <font-awesome-icon icon="fa-solid fa-times" class="text-base sm:text-lg" />
@@ -292,7 +291,7 @@
           </div>
           <h3 class="text-base sm:text-lg font-medium text-gray-900 dark:text-white">هل أنت متأكد من حذف البيانات</h3>
           <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
-            سيتم حذف جميع البيانات المرتبطة بهذا الطالب فيما يخص الدورة بشكل دائم، .
+            سيتم حذف جميع البيانات المرتبطة بهذا الطالب فيما يخص الدورة بشكل دائم.
           </p>
           <p class="text-xs sm:text-sm text-red-500 dark:text-red-400">
             <font-awesome-icon icon="fa-solid fa-triangle-exclamation" class="mr-1 w-3 h-3 sm:w-4 sm:h-4" />
@@ -321,28 +320,25 @@
       </div>
     </div>
   </div>
-
-
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, nextTick, computed, watch, onBeforeUnmount } from 'vue'
-import api from '@/services/api'
-import { useToast } from '../../composables/useToast'
-import { Tabs } from 'flowbite'
-import type { TabsOptions, TabItem, TabsInterface } from 'flowbite'
-import { formatCurrency } from '../../../utils/format.ts';
-
+import { ref, onMounted, nextTick, computed, watch, onBeforeUnmount } from 'vue';
+import api from '@/services/api';
+import { useToast } from '../../composables/useToast';
+import { Tabs } from 'flowbite';
+import type { TabsOptions, TabItem, TabsInterface } from 'flowbite';
+import { formatCurrency } from '../../utils/format.ts';
 
 // Toast
-const { showToastMessage } = useToast()
+const { showToastMessage } = useToast();
 
 // --- Interfaces ---
 interface Student {
   id: number;
   FullName: string;
-  phoneNumber: string | number;
-  Parent_phone_number: string | number;
+  phoneNumber: string;
+  Parent_phone_number: string;
   Address: string;
 }
 
@@ -353,16 +349,16 @@ interface StudentWithRelation extends Student {
 interface Course {
   id: number;
   CourseName: string;
-  subject_name: string;
-  teacher_name: string;
-  institute_name: string;
-  Course_price: string;
+  subjectName: string;
+  teacherName: string;
+  instituteName: string;
+  Course_price: number;
   Course_date: string;
 }
 
 // Api raw item
 interface ApiResponseItem {
-  id: number;        // relation id between course and student
+  id: number; // relation id between course and student
   course: Course;
   student: Student;
 }
@@ -395,25 +391,27 @@ const openAddEditStudentModalVisible = ref(false);
 const isEditMode = ref(false);
 const infoId = ref<number | null>(null); // relation id for edit
 
-// computed: group rawData but keep relation id
+// computed: group courses with relations
 const groupedCourses = computed<GroupedCourse[]>(() => {
-  if (!rawData.value || rawData.value.length === 0) return [];
-
   const courseMap = new Map<number, GroupedCourse>();
 
-  for (const item of rawData.value) {
-    if (!courseMap.has(item.course.id)) {
-      courseMap.set(item.course.id, {
-        course: item.course,
-        students: []
+  // Initialize all courses, even those without students
+  courses.value.forEach(course => {
+    courseMap.set(course.id, {
+      course,
+      students: []
+    });
+  });
+
+  // Add students to their respective courses
+  rawData.value.forEach(item => {
+    if (courseMap.has(item.course.id)) {
+      courseMap.get(item.course.id)!.students.push({
+        ...item.student,
+        relation_id: item.id
       });
     }
-    // push student with relation id
-    courseMap.get(item.course.id)!.students.push({
-      ...item.student,
-      relation_id: item.id
-    });
-  }
+  });
 
   return Array.from(courseMap.values());
 });
@@ -456,8 +454,23 @@ watch(groupedCourses, async () => {
 const fetchAllCoursesForStudents = async () => {
   isLoading.value = true;
   try {
-    const response = await api.get<{ data: ApiResponseItem[] }>('/course-students');
-    rawData.value = response.data.data || [];
+    const [coursesRes, relationsRes] = await Promise.all([
+      api.get('/courses'),
+      api.get('/course-students')
+    ]);
+
+    // Map courses to match the expected Course interface
+    courses.value = coursesRes.data.data.map((course: any) => ({
+      id: course.id,
+      CourseName: course.CourseName,
+      subjectName: course.subject?.subjectName || 'غير محدد',
+      teacherName: course.teacher?.FullName || 'غير محدد',
+      instituteName: course.institute?.name || 'غير محدد',
+      Course_price: course.Course_price || 0,
+      Course_date: course.Course_date || ''
+    })) || [];
+
+    rawData.value = relationsRes.data.data || [];
     showToastMessage('success', 'تم تحميل البيانات بنجاح');
   } catch (err) {
     console.error(err);
@@ -470,43 +483,39 @@ const fetchAllCoursesForStudents = async () => {
 const fetchStudents = async () => {
   try {
     const res = await api.get('/students');
-    students.value = res.data.data || [];
+    students.value = res.data.data.map((student: any) => ({
+      id: student.id,
+      FullName: student.FullName,
+      phoneNumber: student.phoneNumber,
+      Parent_phone_number: student.Parent_phone_number,
+      Address: student.Address
+    })) || [];
   } catch (err) {
     console.error(err);
     showToastMessage('error', 'حدث خطاء اثناء جلب بيانات الطلاب');
   }
 };
 
-const fetchCourses = async () => {
-  try {
-    const res = await api.get('/courses');
-    courses.value = res.data.data || [];
-  } catch (err) {
-    console.error(err);
-    showToastMessage('error', 'حدث خطاء اثناء جلب بيانات الدورات');
-  }
-};
-
 // modal open/close
-const openAddEditStudentModal = (editMode = false, courseId: number | null = null) => {
+const openAddEditStudentModal = async (
+  editMode = false,
+  student?: StudentWithRelation,
+  courseId: number | null = null
+) => {
   isEditMode.value = editMode;
-  if (!editMode) {
-    resetForm();
-    if (courseId) form.value.course_id = courseId;
-  }
-  openAddEditStudentModalVisible.value = true;
-  // ensure students & courses loaded
-  fetchStudents();
-  fetchCourses();
-};
+  resetForm();
 
-const startEdit = (student: StudentWithRelation, courseId: number) => {
-  isEditMode.value = true;
-  infoId.value = student.relation_id;
-  form.value = {
-    student_id: student.id,
-    course_id: courseId
-  };
+  // تحميل الطلاب أولاً لضمان أن القائمة جاهزة قبل الفتح
+  await fetchStudents();
+
+  if (editMode && student) {
+    infoId.value = student.relation_id;
+    form.value.student_id = Number(student.id);
+    form.value.course_id = Number(courseId ?? 0);
+  } else if (courseId) {
+    form.value.course_id = Number(courseId);
+  }
+
   openAddEditStudentModalVisible.value = true;
 };
 
@@ -515,7 +524,7 @@ const closeModal = () => {
   isEditMode.value = false;
   infoId.value = null;
   showDeleteModal.value = false;
-  pendingRelationId.value = null
+  pendingRelationId.value = null;
   resetForm();
 };
 
@@ -528,6 +537,7 @@ const resetForm = () => {
 
 // submit (create or update)
 const handleSubmit = async () => {
+  console.log(form.value);
   try {
     const payload = {
       student_id: form.value.student_id,
@@ -551,10 +561,10 @@ const handleSubmit = async () => {
   }
 };
 
-const openDeleteModal = (relationId: number)=> {
+const openDeleteModal = (relationId: number) => {
   pendingRelationId.value = relationId;
   showDeleteModal.value = true;
-}
+};
 
 // delete relation
 const handleDeleteCourseStudent = async () => {
@@ -600,7 +610,6 @@ const onDocumentClick = (e: MouseEvent) => {
     activeUserOptions.value = null;
   }
 };
-
 
 onMounted(async () => {
   await fetchAllCoursesForStudents();

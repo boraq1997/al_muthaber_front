@@ -173,11 +173,38 @@ export const confirmDeleteLecture = async (lectureId:any) => {
 
 export const fetchLectureAttachments = async (lectId: any) => {
   try {
-    const response = await api.get(`/lecture-attachments?lect_id=${lectId}`);
+    const response = await api.get(`/lectures/${lectId}/attachments`);
     return response.data.data || [];
   } catch (err) {
     showToastMessage('error', 'حدث خطأ أثناء جلب المرفقات');
     console.error(err);
     return [];
+  }
+};
+
+// services/fileService.ts
+export const downloadPrivateFile = async (path: string) => {
+  try {
+    const response = await api.get(`file/submission/${path}`, {
+      responseType: 'blob', // مهم للتحميل
+    });
+
+    // إنشاء رابط التحميل
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement('a');
+    link.href = url;
+
+    // استخراج اسم الملف من المسار
+    const filename = path.split('/').pop() || 'file';
+    link.setAttribute('download', filename);
+
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+
+    showToastMessage('success', 'تم تحميل الملف بنجاح');
+  } catch (err) {
+    console.error('خطأ أثناء تحميل الملف:', err);
+    showToastMessage('error', 'حدث خطأ أثناء تحميل الملف');
   }
 };

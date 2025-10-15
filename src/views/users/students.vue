@@ -26,8 +26,10 @@
               <input
                 id="search"
                 type="search"
+                v-model="searchQuery"
+                @input="debouncedSearch"
+                placeholder="البحث بالاسم أو رقم الهاتف"
                 required
-                placeholder="البحث"
                 class="w-full border text-xs sm:text-sm border-gray-300 rounded-md px-3 py-1 pr-10 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent transition"
               />
               <font-awesome-icon
@@ -42,12 +44,6 @@
 
     <!-- Buttons -->
     <div class="flex items-center gap-2 flex-wrap">
-      <button
-        class="flex items-center gap-1 bg-gray-200 hover:bg-gray-300 text-gray-800 text-xs sm:text-sm font-medium px-3 sm:px-5 py-2 sm:py-2.5 rounded shadow transition"
-      >
-        <font-awesome-icon icon="fa-filter" class="w-3 h-3 sm:w-4 sm:h-4" />
-        فلترة
-      </button>
       <button
         @click="openModal(false)"
         type="button"
@@ -403,7 +399,7 @@
           <button
             @click="closeModal"
             type="button"
-            class="px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 mr-2 sm:mr-3"
+            class="px-3 sm:px-4 py-1.5 mr-1 ml-2 sm:py-2 text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:mr-3"
           >
             إلغاء
           </button>
@@ -476,12 +472,13 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue'
-import api from '../../services/api'
-import { useToast } from '../../composables/useToast.ts'
+import { ref, onMounted, onBeforeUnmount } from 'vue';
+import api from '../../services/api';
+import { useToast } from '../../composables/useToast.ts';
+import { debounce } from 'lodash'; // استيراد debounce من lodash
 
 // Toast
-const { showToastMessage } = useToast()
+const { showToastMessage } = useToast();
 
 // Form
 const form = ref({
@@ -492,8 +489,8 @@ const form = ref({
   Institute_id: '',
   Stage_id: '',
   password: '',
-  Is_active: false
-})
+  Is_active: false,
+});
 
 const errors = ref({
   FullName: '',
@@ -502,13 +499,145 @@ const errors = ref({
   Parent_phone_number: '',
   Institute_id: '',
   Stage_id: '',
-  password: ''
-})
+  password: '',
+});
 
-const studentId = ref(null)
-const isEditMode = ref(false)
-const isLoading = ref(false)
+const studentId = ref(null);
+const isEditMode = ref(false);
+const isLoading = ref(false);
 
+// البحث
+const searchQuery = ref('');
+
+// دالة البحث مع debounce
+const debouncedSearch = debounce(() => {
+  fetchStudents(1); // إعادة جلب الطلاب مع الفلتر عند كل تغيير في البحث
+}, 500);
+
+// Data
+const students = ref([]);
+const institutes = ref([]);
+const stages = ref([]);
+const currentPage = ref(1);
+const perPage = ref(15);
+const totalRecords = ref(0);
+const meta = ref({ links: [], from: 0, to: 0, total: 0 });
+const links = ref({ prev: null, next: null });
+
+const fetchStudents = async (page = 1) => {
+  isLoading.value = true;
+  try {
+    // بناء معلمات الاستعلام
+    const queryParams = new URLSearchParams();
+    queryParams.append('page', page.toString());
+    if (searchQuery.value) {
+      // البحث في FullName أو PhoneNumber
+      queryParams.append('filter[FullName]', searchQuery.value);
+      // يمكن إضافة فلتر لـ PhoneNumber إذا أردت البحث فيه أيضًا
+      // queryParams.append('filter[PhoneNumber]', searchQuery.value);
+    }
+
+    const response = await api.get(`/students?${queryParams.toString()}`);
+    students.value = response.data.data || [];
+    meta.value = response.data.meta || { links: [], from: 0, to: 0, total: 0 };
+    links.value = response.data.links || { prev: null, next: null };
+    currentPage.value = response.data.meta?.current_page || 1;
+    perPage.value = response.data.meta?.per_page || 15;
+    totalRecords.value = response.data.meta?.total || 0;
+  } catch (err) {
+    showToastMessage('danger', err.response?.data?.message || 'حدث خطأ أثناء جلب بيانات الطلاب');
+    console.error(err);
+    students.value = [];
+    meta.value = { links: [], from: 0, to: 0, total: 0 };
+    links.value = { prev: null, next: null };
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+const getInstitutes = async () => {
+  try {
+    const response = await api.get('/institutes');
+    institutes.value = response.data.data || [];
+  } catch (err) {
+    showToastMessage('danger', 'حدث خطأ أثناء جلب المعاهد');
+    console.error(err);
+  }
+};
+
+const getStages = async () => {
+  try {
+    const response = await api.get('/stages');
+    stages.value = response.data.data || [];
+  } catch (err) {
+    showToastMessage('danger', 'حدث خطأ أثناء جلب المراحل');
+    console.error(err);
+  }
+};
+
+// Pagination
+const changePage = (url) => {
+  if (!url) return;
+  const page = new URL(url).searchParams.get('page');
+  if (page && page !== currentPage.value.toString()) {
+    fetchStudents(page);
+  }
+};
+
+// Modals
+const showAddEditModal = ref(false);
+const showDeleteModal = ref(false);
+
+const openModal = async (editMode = false) => {
+  isEditMode.value = editMode;
+  if (!editMode) resetForm();
+  showAddEditModal.value = true;
+  await Promise.all([getInstitutes(), getStages()]);
+};
+
+const closeModal = () => {
+  showAddEditModal.value = false;
+  showDeleteModal.value = false;
+  resetForm();
+};
+
+const confirmDelete = (id) => {
+  studentId.value = id;
+  showDeleteModal.value = !!id;
+};
+
+const deleteStudent = async () => {
+  if (!studentId.value) return;
+  try {
+    await api.delete(`/students/${studentId.value}`);
+    await fetchStudents(currentPage.value);
+    studentId.value = null;
+    showDeleteModal.value = false;
+    showToastMessage('success', 'تم حذف بيانات الطالب بنجاح');
+  } catch (err) {
+    showToastMessage('danger', 'حدث خطأ أثناء العملية');
+    console.error(err);
+  }
+};
+
+// Dropdown Options
+const activeUserOptions = ref(null);
+const dropdownButton = ref([]);
+const dropdownMenu = ref([]);
+
+const toggleUserOptions = (index) => {
+  activeUserOptions.value = activeUserOptions.value === index ? null : index;
+};
+
+const handleClickOutside = (event) => {
+  const isInsideAnyDropdown = dropdownMenu.value.some((menu) => menu?.contains(event.target));
+  const isInsideAnyButton = dropdownButton.value.some((btn) => btn?.contains(event.target));
+  if (!isInsideAnyDropdown && !isInsideAnyButton) {
+    activeUserOptions.value = null;
+  }
+};
+
+// Form Handling
 const resetForm = () => {
   form.value = {
     FullName: '',
@@ -518,8 +647,8 @@ const resetForm = () => {
     Institute_id: '',
     Stage_id: '',
     password: '',
-    Is_active: false
-  }
+    Is_active: false,
+  };
   errors.value = {
     FullName: '',
     Address: '',
@@ -527,11 +656,11 @@ const resetForm = () => {
     Parent_phone_number: '',
     Institute_id: '',
     Stage_id: '',
-    password: ''
-  }
-  studentId.value = null
-  isEditMode.value = false
-}
+    password: '',
+  };
+  studentId.value = null;
+  isEditMode.value = false;
+};
 
 const startEdit = (student) => {
   form.value = {
@@ -542,8 +671,8 @@ const startEdit = (student) => {
     Institute_id: student.Institute_id,
     Stage_id: student.Stage_id,
     password: '',
-    Is_active: Boolean(student.Is_active)
-  }
+    Is_active: Boolean(student.Is_active),
+  };
   errors.value = {
     FullName: '',
     Address: '',
@@ -551,14 +680,14 @@ const startEdit = (student) => {
     Parent_phone_number: '',
     Institute_id: '',
     Stage_id: '',
-    password: ''
-  }
-  studentId.value = student.id
-  openModal(true)
-}
+    password: '',
+  };
+  studentId.value = student.id;
+  openModal(true);
+};
 
 const validateForm = () => {
-  let isValid = true
+  let isValid = true;
   errors.value = {
     FullName: '',
     Address: '',
@@ -566,47 +695,47 @@ const validateForm = () => {
     Parent_phone_number: '',
     Institute_id: '',
     Stage_id: '',
-    password: ''
-  }
+    password: '',
+  };
 
   if (!form.value.FullName) {
-    errors.value.FullName = 'الاسم الرباعي مطلوب'
-    isValid = false
+    errors.value.FullName = 'الاسم الرباعي مطلوب';
+    isValid = false;
   }
   if (!form.value.Address) {
-    errors.value.Address = 'العنوان مطلوب'
-    isValid = false
+    errors.value.Address = 'العنوان مطلوب';
+    isValid = false;
   }
   if (!form.value.phoneNumber) {
-    errors.value.phoneNumber = 'رقم الهاتف مطلوب'
-    isValid = false
+    errors.value.phoneNumber = 'رقم الهاتف مطلوب';
+    isValid = false;
   }
   if (!form.value.Parent_phone_number) {
-    errors.value.Parent_phone_number = 'رقم هاتف ولي الأمر مطلوب'
-    isValid = false
+    errors.value.Parent_phone_number = 'رقم هاتف ولي الأمر مطلوب';
+    isValid = false;
   }
   if (!isEditMode.value && !form.value.password) {
-    errors.value.password = 'كلمة المرور مطلوبة'
-    isValid = false
+    errors.value.password = 'كلمة المرور مطلوبة';
+    isValid = false;
   } else if (!isEditMode.value && form.value.password.length < 6) {
-    errors.value.password = 'كلمة المرور يجب أن تكون 6 خانات على الأقل'
-    isValid = false
+    errors.value.password = 'كلمة المرور يجب أن تكون 6 خانات على الأقل';
+    isValid = false;
   }
   if (!form.value.Institute_id) {
-    errors.value.Institute_id = 'المعهد مطلوب'
-    isValid = false
+    errors.value.Institute_id = 'المعهد مطلوب';
+    isValid = false;
   }
   if (!form.value.Stage_id) {
-    errors.value.Stage_id = 'المرحلة مطلوبة'
-    isValid = false
+    errors.value.Stage_id = 'المرحلة مطلوبة';
+    isValid = false;
   }
 
-  return isValid
-}
+  return isValid;
+};
 
 const handleSubmit = async () => {
   if (!validateForm()) {
-    return
+    return;
   }
 
   try {
@@ -617,159 +746,46 @@ const handleSubmit = async () => {
       Parent_phone_number: form.value.Parent_phone_number,
       Institute_id: form.value.Institute_id,
       Stage_id: form.value.Stage_id,
-      Is_active: form.value.Is_active
-    }
+      Is_active: form.value.Is_active,
+    };
     if (form.value.password) {
-      payload.password = form.value.password
+      payload.password = form.value.password;
     }
 
     if (isEditMode.value) {
-      await api.put(`/students/${studentId.value}`, payload)
+      await api.put(`/students/${studentId.value}`, payload);
     } else {
-      await api.post('/students', payload)
+      await api.post('/students', payload);
     }
 
-    await fetchStudents(currentPage.value)
-    closeModal()
-    showToastMessage('success', isEditMode.value ? 'تم تعديل بيانات الطالب بنجاح' : 'تمت إضافة بيانات الطالب بنجاح')
-    resetForm()
+    await fetchStudents(currentPage.value);
+    closeModal();
+    showToastMessage('success', isEditMode.value ? 'تم تعديل بيانات الطالب بنجاح' : 'تمت إضافة بيانات الطالب بنجاح');
+    resetForm();
   } catch (err) {
     if (err.response && err.response.status === 422) {
-      const apiErrors = err.response.data.errors
+      const apiErrors = err.response.data.errors;
       if (apiErrors.phoneNumber) {
-        errors.value.phoneNumber = 'رقم الهاتف موجود مسبقًا'
+        errors.value.phoneNumber = 'رقم الهاتف موجود مسبقًا';
       }
       if (apiErrors.Parent_phone_number) {
-        errors.value.Parent_phone_number = 'رقم هاتف ولي الأمر موجود مسبقًا'
+        errors.value.Parent_phone_number = 'رقم هاتف ولي الأمر موجود مسبقًا';
       }
-      showToastMessage('danger', 'حدث خطأ في التحقق من البيانات')
+      showToastMessage('danger', 'حدث خطأ في التحقق من البيانات');
     } else {
-      showToastMessage('danger', err.response?.data?.message || 'حدث خطأ أثناء العملية')
+      showToastMessage('danger', err.response?.data?.message || 'حدث خطأ أثناء العملية');
     }
-    console.error(err)
+    console.error(err);
   }
-}
-
-// Data
-const students = ref([])
-const institutes = ref([])
-const stages = ref([])
-const currentPage = ref(1)
-const perPage = ref(15)
-const totalRecords = ref(0)
-const meta = ref({ links: [], from: 0, to: 0, total: 0 })
-const links = ref({ prev: null, next: null })
-
-const fetchStudents = async (page = 1) => {
-  isLoading.value = true
-  try {
-    const response = await api.get(`/students?page=${page}`)
-    students.value = response.data.data || []
-    meta.value = response.data.meta || { links: [], from: 0, to: 0, total: 0 }
-    links.value = response.data.links || { prev: null, next: null }
-    currentPage.value = response.data.meta?.current_page || 1
-    perPage.value = response.data.meta?.per_page || 15
-    totalRecords.value = response.data.meta?.total || 0
-  } catch (err) {
-    showToastMessage('danger', err.response?.data?.message || 'حدث خطأ أثناء جلب بيانات الطلاب')
-    console.error(err)
-    students.value = []
-    meta.value = { links: [], from: 0, to: 0, total: 0 }
-    links.value = { prev: null, next: null }
-  } finally {
-    isLoading.value = false
-  }
-}
-
-const getInstitutes = async () => {
-  try {
-    const response = await api.get('/institutes')
-    institutes.value = response.data.data || []
-  } catch (err) {
-    showToastMessage('danger', 'حدث خطأ أثناء جلب المعاهد')
-    console.error(err)
-  }
-}
-
-const getStages = async () => {
-  try {
-    const response = await api.get('/stages')
-    stages.value = response.data.data || []
-  } catch (err) {
-    showToastMessage('danger', 'حدث خطأ أثناء جلب المراحل')
-    console.error(err)
-  }
-}
-
-// Pagination
-const changePage = (url) => {
-  if (!url) return
-  const page = new URL(url).searchParams.get('page')
-  if (page && page !== currentPage.value.toString()) {
-    fetchStudents(page)
-  }
-}
-
-// Modals
-const showAddEditModal = ref(false)
-const showDeleteModal = ref(false)
-
-const openModal = async (editMode = false) => {
-  isEditMode.value = editMode
-  if (!editMode) resetForm()
-  showAddEditModal.value = true
-  await Promise.all([getInstitutes(), getStages()])
-}
-
-const closeModal = () => {
-  showAddEditModal.value = false
-  showDeleteModal.value = false
-  resetForm()
-}
-
-const confirmDelete = (id) => {
-  studentId.value = id
-  showDeleteModal.value = !!id
-}
-
-const deleteStudent = async () => {
-  if (!studentId.value) return
-  try {
-    await api.delete(`/students/${studentId.value}`)
-    await fetchStudents(currentPage.value)
-    studentId.value = null
-    showDeleteModal.value = false
-    showToastMessage('success', 'تم حذف بيانات الطالب بنجاح')
-  } catch (err) {
-    showToastMessage('danger', 'حدث خطأ أثناء العملية')
-    console.error(err)
-  }
-}
-
-// Dropdown Options
-const activeUserOptions = ref(null)
-const dropdownButton = ref([])
-const dropdownMenu = ref([])
-
-const toggleUserOptions = (index) => {
-  activeUserOptions.value = activeUserOptions.value === index ? null : index
-}
-
-const handleClickOutside = (event) => {
-  const isInsideAnyDropdown = dropdownMenu.value.some((menu) => menu?.contains(event.target))
-  const isInsideAnyButton = dropdownButton.value.some((btn) => btn?.contains(event.target))
-  if (!isInsideAnyDropdown && !isInsideAnyButton) {
-    activeUserOptions.value = null
-  }
-}
+};
 
 // Lifecycle
 onMounted(() => {
-  window.addEventListener('click', handleClickOutside)
-  fetchStudents()
-})
+  window.addEventListener('click', handleClickOutside);
+  fetchStudents();
+});
 
 onBeforeUnmount(() => {
-  window.removeEventListener('click', handleClickOutside)
-})
+  window.removeEventListener('click', handleClickOutside);
+});
 </script>

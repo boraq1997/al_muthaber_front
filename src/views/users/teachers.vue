@@ -26,8 +26,9 @@
               <input
                 id="search"
                 type="search"
-                required
-                placeholder="البحث"
+                v-model="searchQuery"
+                @input="debouncedSearch"
+                placeholder="البحث بالاسم أو رقم الهاتف"
                 class="w-full border text-xs sm:text-sm border-gray-300 rounded-md px-3 py-1 pr-10 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent transition"
               />
               <font-awesome-icon
@@ -42,12 +43,6 @@
 
     <!-- Buttons -->
     <div class="flex items-center gap-2 flex-wrap">
-      <button
-        class="flex items-center gap-1 bg-gray-200 hover:bg-gray-300 text-gray-800 text-xs sm:text-sm font-medium px-3 sm:px-5 py-2 sm:py-2.5 rounded shadow transition"
-      >
-        <font-awesome-icon icon="fa-filter" class="w-3 h-3 sm:w-4 sm:h-4" />
-        فلترة
-      </button>
       <button
         @click="openModal(false)"
         type="button"
@@ -91,7 +86,7 @@
             <font-awesome-icon icon="fa-solid fa-signal" class="mr-1 sm:mr-2 w-3 h-3 sm:w-4 sm:h-4" />
             الحالة
           </th>
-          <th scope="col" class="px-2 sm:px-3 py-2 font-semibold">
+          <th alarmed="true" scope="col" class="px-2 sm:px-3 py-2 font-semibold">
             <font-awesome-icon icon="fa-solid fa-user-gear" class="mr-1 sm:mr-2 w-3 h-3 sm:w-4 sm:h-4" />
             الإدارة
           </th>
@@ -255,7 +250,7 @@
                     required
                     placeholder="رقم الهاتف"
                     class="w-full pl-3 pr-10 py-1.5 sm:py-2 text-xs sm:text-base border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200"
-                    :class="errors.PhoneNumber ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 dark:border-gray-600 focus:ring-purple-500 focus:border-transparent'"
+                    :Tclass="errors.PhoneNumber ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 dark:border-gray-600 focus:ring-purple-500 focus:border-transparent'"
                   />
                   <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                     <font-awesome-icon icon="fa-phone" class="text-gray-400 w-3 h-3 sm:w-4 sm:h-4" />
@@ -328,7 +323,9 @@
                 <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">المادة التي يقوم بتدريسها الأستاذ</p>
               </div>
 
-              <!-- Is Active -->
+             
+
+<!-- Is Active -->
               <div class="space-y-2 col-span-1 sm:col-span-2">
                 <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">الحالة</label>
                 <div class="relative">
@@ -351,7 +348,7 @@
           <button
             @click="closeModal"
             type="button"
-            class="px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 mr-2 sm:mr-3"
+            class="px-3 sm:px-4 py-1.5 mr-1 ml-2 sm:py-2 text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:mr-3"
           >
             إلغاء
           </button>
@@ -424,12 +421,13 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue'
-import api from '../../services/api'
-import { useToast } from '../../composables/useToast.ts'
+import { ref, onMounted, onBeforeUnmount } from 'vue';
+import api from '../../services/api';
+import { useToast } from '../../composables/useToast.ts';
+import { debounce } from 'lodash'; // استيراد debounce من lodash
 
 // Toast
-const { showToastMessage } = useToast()
+const { showToastMessage } = useToast();
 
 // Form
 const form = ref({
@@ -438,21 +436,153 @@ const form = ref({
   password: '',
   Institute_id: '',
   Subject_id: '',
-  IsActive: false
-})
+  IsActive: false,
+});
 
 const errors = ref({
   FullName: '',
   PhoneNumber: '',
   password: '',
   Institute_id: '',
-  Subject_id: ''
-})
+  Subject_id: '',
+});
 
-const teacherId = ref(null)
-const isEditMode = ref(false)
-const isLoading = ref(false)
+const teacherId = ref(null);
+const isEditMode = ref(false);
+const isLoading = ref(false);
 
+// البحث
+const searchQuery = ref('');
+
+// دالة البحث مع debounce
+const debouncedSearch = debounce(() => {
+  fetchTeachers(1); // إعادة جلب الأساتذة مع الفلتر عند كل تغيير في البحث
+}, 500);
+
+// Data
+const teachers = ref([]);
+const subjects = ref([]);
+const institutes = ref([]);
+const currentPage = ref(1);
+const perPage = ref(15);
+const totalRecords = ref(0);
+const meta = ref({ links: [], from: 0, to: 0, total: 0 });
+const links = ref({ prev: null, next: null });
+
+const fetchTeachers = async (page = 1) => {
+  isLoading.value = true;
+  try {
+    // بناء معلمات الاستعلام
+    const queryParams = new URLSearchParams();
+    queryParams.append('page', page.toString());
+    if (searchQuery.value) {
+      // البحث في FullName
+      queryParams.append('filter[FullName]', searchQuery.value);
+      // يمكن إضافة فلتر لـ PhoneNumber إذا أردت البحث فيه أيضًا
+      // queryParams.append('filter[PhoneNumber]', searchQuery.value);
+    }
+
+    const response = await api.get(`/teachers?${queryParams.toString()}`);
+    teachers.value = response.data.data || [];
+    meta.value = response.data.meta || { links: [], from: 0, to: 0, total: 0 };
+    links.value = response.data.links || { prev: null, next: null };
+    currentPage.value = response.data.meta?.current_page || 1;
+    perPage.value = response.data.meta?.per_page || 15;
+    totalRecords.value = response.data.meta?.total || 0;
+  } catch (err) {
+    showToastMessage('danger', err.response?.data?.message || 'حدث خطأ أثناء جلب بيانات الأساتذة');
+    console.error(err);
+    teachers.value = [];
+    meta.value = { links: [], from: 0, to: 0, total: 0 };
+    links.value = { prev: null, next: null };
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+const getSubjects = async () => {
+  try {
+    const response = await api.get('/subjects');
+    subjects.value = response.data.data || [];
+  } catch (err) {
+    showToastMessage('danger', 'حدث خطأ أثناء جلب المواد');
+    console.error(err);
+  }
+};
+
+const getInstitutes = async () => {
+  try {
+    const response = await api.get('/institutes');
+    institutes.value = response.data.data || [];
+  } catch (err) {
+    showToastMessage('danger', 'حدث خطأ أثناء جلب المعاهد');
+    console.error(err);
+  }
+};
+
+// Pagination
+const changePage = (url) => {
+  if (!url) return;
+  const page = new URL(url).searchParams.get('page');
+  if (page && page !== currentPage.value.toString()) {
+    fetchTeachers(page);
+  }
+};
+
+// Modals
+const showAddEditModal = ref(false);
+const showDeleteModal = ref(false);
+
+const openModal = async (editMode = false) => {
+  isEditMode.value = editMode;
+  if (!editMode) resetForm();
+  showAddEditModal.value = true;
+  await Promise.all([getSubjects(), getInstitutes()]);
+};
+
+const closeModal = () => {
+  showAddEditModal.value = false;
+  showDeleteModal.value = false;
+  resetForm();
+};
+
+const confirmDelete = (id) => {
+  teacherId.value = id;
+  showDeleteModal.value = !!id;
+};
+
+const deleteTeacher = async () => {
+  if (!teacherId.value) return;
+  try {
+    await api.delete(`/teachers/${teacherId.value}`);
+    await fetchTeachers(currentPage.value);
+    teacherId.value = null;
+    showDeleteModal.value = false;
+    showToastMessage('success', 'تم حذف بيانات الأستاذ بنجاح');
+  } catch (err) {
+    showToastMessage('danger', 'حدث خطأ أثناء العملية');
+    console.error(err);
+  }
+};
+
+// Dropdown Options
+const activeUserOptions = ref(null);
+const dropdownButton = ref([]);
+const dropdownMenu = ref([]);
+
+const toggleUserOptions = (index) => {
+  activeUserOptions.value = activeUserOptions.value === index ? null : index;
+};
+
+const handleClickOutside = (event) => {
+  const isInsideAnyDropdown = dropdownMenu.value.some((menu) => menu?.contains(event.target));
+  const isInsideAnyButton = dropdownButton.value.some((btn) => btn?.contains(event.target));
+  if (!isInsideAnyDropdown && !isInsideAnyButton) {
+    activeUserOptions.value = null;
+  }
+};
+
+// Form Handling
 const resetForm = () => {
   form.value = {
     FullName: '',
@@ -460,18 +590,18 @@ const resetForm = () => {
     password: '',
     Institute_id: '',
     Subject_id: '',
-    IsActive: false
-  }
+    IsActive: false,
+  };
   errors.value = {
     FullName: '',
     PhoneNumber: '',
     password: '',
     Institute_id: '',
-    Subject_id: ''
-  }
-  teacherId.value = null
-  isEditMode.value = false
-}
+    Subject_id: '',
+  };
+  teacherId.value = null;
+  isEditMode.value = false;
+};
 
 const startEdit = (teacher) => {
   form.value = {
@@ -480,59 +610,59 @@ const startEdit = (teacher) => {
     password: '',
     Institute_id: teacher.Institute_id,
     Subject_id: teacher.Subject_id,
-    IsActive: Boolean(teacher.IsActive)
-  }
+    IsActive: Boolean(teacher.IsActive),
+  };
   errors.value = {
     FullName: '',
     PhoneNumber: '',
     password: '',
     Institute_id: '',
-    Subject_id: ''
-  }
-  teacherId.value = teacher.id
-  openModal(true)
-}
+    Subject_id: '',
+  };
+  teacherId.value = teacher.id;
+  openModal(true);
+};
 
 const validateForm = () => {
-  let isValid = true
+  let isValid = true;
   errors.value = {
     FullName: '',
     PhoneNumber: '',
     password: '',
     Institute_id: '',
-    Subject_id: ''
-  }
+    Subject_id: '',
+  };
 
   if (!form.value.FullName) {
-    errors.value.FullName = 'الاسم الرباعي مطلوب'
-    isValid = false
+    errors.value.FullName = 'الاسم الرباعي مطلوب';
+    isValid = false;
   }
   if (!form.value.PhoneNumber) {
-    errors.value.PhoneNumber = 'رقم الهاتف مطلوب'
-    isValid = false
+    errors.value.PhoneNumber = 'رقم الهاتف مطلوب';
+    isValid = false;
   }
   if (!isEditMode.value && !form.value.password) {
-    errors.value.password = 'كلمة المرور مطلوبة'
-    isValid = false
+    errors.value.password = 'كلمة المرور مطلوبة';
+    isValid = false;
   } else if (!isEditMode.value && form.value.password.length < 6) {
-    errors.value.password = 'كلمة المرور يجب أن تكون 6 خانات على الأقل'
-    isValid = false
+    errors.value.password = 'كلمة المرور يجب أن تكون 6 خانات على الأقل';
+    isValid = false;
   }
   if (!form.value.Institute_id) {
-    errors.value.Institute_id = 'المعهد مطلوب'
-    isValid = false
+    errors.value.Institute_id = 'المعهد مطلوب';
+    isValid = false;
   }
   if (!form.value.Subject_id) {
-    errors.value.Subject_id = 'المادة مطلوبة'
-    isValid = false
+    errors.value.Subject_id = 'المادة مطلوبة';
+    isValid = false;
   }
 
-  return isValid
-}
+  return isValid;
+};
 
 const handleSubmit = async () => {
   if (!validateForm()) {
-    return
+    return;
   }
 
   try {
@@ -541,156 +671,43 @@ const handleSubmit = async () => {
       PhoneNumber: form.value.PhoneNumber,
       Institute_id: form.value.Institute_id,
       Subject_id: form.value.Subject_id,
-      IsActive: form.value.IsActive
-    }
+      IsActive: form.value.IsActive,
+    };
     if (form.value.password) {
-      payload.password = form.value.password
+      payload.password = form.value.password;
     }
 
     if (isEditMode.value) {
-      await api.put(`/teachers/${teacherId.value}`, payload)
+      await api.put(`/teachers/${teacherId.value}`, payload);
     } else {
-      await api.post('/teachers', payload)
+      await api.post('/teachers', payload);
     }
-    showToastMessage('success', isEditMode.value ? 'تم تعديل بيانات الأستاذ بنجاح' : 'تمت إضافة بيانات الأستاذ بنجاح')
+    showToastMessage('success', isEditMode.value ? 'تم تعديل بيانات الأستاذ بنجاح' : 'تمت إضافة بيانات الأستاذ بنجاح');
 
-    await fetchTeachers(currentPage.value)
-    closeModal()
-    resetForm()
+    await fetchTeachers(currentPage.value);
+    closeModal();
+    resetForm();
   } catch (err) {
     if (err.response && err.response.status === 422) {
-      const apiErrors = err.response.data.errors
+      const apiErrors = err.response.data.errors;
       if (apiErrors.PhoneNumber) {
-        errors.value.PhoneNumber = 'رقم الهاتف موجود مسبقًا'
+        errors.value.PhoneNumber = 'رقم الهاتف موجود مسبقًا';
       }
-      showToastMessage('danger', 'حدث خطأ في التحقق من البيانات')
+      showToastMessage('danger', 'حدث خطأ في التحقق من البيانات');
     } else {
-      showToastMessage('danger', err.response?.data?.message || 'حدث خطأ أثناء العملية')
+      showToastMessage('danger', err.response?.data?.message || 'حدث خطأ أثناء العملية');
     }
-    console.error(err)
+    console.error(err);
   }
-}
-
-// Data
-const teachers = ref([])
-const subjects = ref([])
-const institutes = ref([])
-const currentPage = ref(1)
-const perPage = ref(15)
-const totalRecords = ref(0)
-const meta = ref({ links: [], from: 0, to: 0, total: 0 })
-const links = ref({ prev: null, next: null })
-
-const fetchTeachers = async (page = 1) => {
-  isLoading.value = true
-  try {
-    const response = await api.get(`/teachers?page=${page}`)
-    teachers.value = response.data.data || []
-    meta.value = response.data.meta || { links: [], from: 0, to: 0, total: 0 }
-    links.value = response.data.links || { prev: null, next: null }
-    currentPage.value = response.data.meta?.current_page || 1
-    perPage.value = response.data.meta?.per_page || 15
-    totalRecords.value = response.data.meta?.total || 0
-  } catch (err) {
-    showToastMessage('danger', err.response?.data?.message || 'حدث خطأ أثناء جلب بيانات الأساتذة')
-    console.error(err)
-    teachers.value = []
-    meta.value = { links: [], from: 0, to: 0, total: 0 }
-    links.value = { prev: null, next: null }
-  } finally {
-    isLoading.value = false
-  }
-}
-
-const getSubjects = async () => {
-  try {
-    const response = await api.get('/subjects')
-    subjects.value = response.data.data || []
-  } catch (err) {
-    showToastMessage('danger', 'حدث خطأ أثناء جلب المواد')
-    console.error(err)
-  }
-}
-
-const getInstitutes = async () => {
-  try {
-    const response = await api.get('/institutes')
-    institutes.value = response.data.data || []
-  } catch (err) {
-    showToastMessage('danger', 'حدث خطأ أثناء جلب المعاهد')
-    console.error(err)
-  }
-}
-
-// Pagination
-const changePage = (url) => {
-  if (!url) return
-  const page = new URL(url).searchParams.get('page')
-  if (page && page !== currentPage.value.toString()) {
-    fetchTeachers(page)
-  }
-}
-
-// Modals
-const showAddEditModal = ref(false)
-const showDeleteModal = ref(false)
-
-const openModal = async (editMode = false) => {
-  isEditMode.value = editMode
-  if (!editMode) resetForm()
-  showAddEditModal.value = true
-  await Promise.all([getSubjects(), getInstitutes()])
-}
-
-const closeModal = () => {
-  showAddEditModal.value = false
-  showDeleteModal.value = false
-  resetForm()
-}
-
-const confirmDelete = (id) => {
-  teacherId.value = id
-  showDeleteModal.value = !!id
-}
-
-const deleteTeacher = async () => {
-  if (!teacherId.value) return
-  try {
-    await api.delete(`/teachers/${teacherId.value}`)
-    await fetchTeachers(currentPage.value)
-    teacherId.value = null
-    showDeleteModal.value = false
-    showToastMessage('success', 'تم حذف بيانات الأستاذ بنجاح')
-  } catch (err) {
-    showToastMessage('danger', 'حدث خطأ أثناء العملية')
-    console.error(err)
-  }
-}
-
-// Dropdown Options
-const activeUserOptions = ref(null)
-const dropdownButton = ref([])
-const dropdownMenu = ref([])
-
-const toggleUserOptions = (index) => {
-  activeUserOptions.value = activeUserOptions.value === index ? null : index
-}
-
-const handleClickOutside = (event) => {
-  const isInsideAnyDropdown = dropdownMenu.value.some((menu) => menu?.contains(event.target))
-  const isInsideAnyButton = dropdownButton.value.some((btn) => btn?.contains(event.target))
-  if (!isInsideAnyDropdown && !isInsideAnyButton) {
-    activeUserOptions.value = null
-  }
-}
+};
 
 // Lifecycle
 onMounted(() => {
-  window.addEventListener('click', handleClickOutside)
-  fetchTeachers()
-})
+  window.addEventListener('click', handleClickOutside);
+  fetchTeachers();
+});
 
 onBeforeUnmount(() => {
-  window.removeEventListener('click', handleClickOutside)
-})
+  window.removeEventListener('click', handleClickOutside);
+});
 </script>

@@ -217,6 +217,22 @@
             </li>
 
             <li>
+              <router-link to="/attendance" class="flex items-center p-2.5 rounded-lg text-white hover:bg-white/20 group"
+                active-class="bg-white/30 font-semibold shadow-md" @click="closeSidebarOnMobile">
+                <font-awesome-icon icon="fa-solid fa-user-check" class="w-5 h-5 text-white" />
+                <span class="ms-3">الحضور</span>
+              </router-link>
+            </li>
+
+            <li>
+              <router-link to="/notifications" class="flex items-center p-2.5 rounded-lg text-white hover:bg-white/20 group"
+                active-class="bg-white/30 font-semibold shadow-md" @click="closeSidebarOnMobile">
+                <font-awesome-icon icon="fa-solid fa-bell" class="w-5 h-5 text-white" />
+                <span class="ms-3">الاشعارات</span>
+              </router-link>
+            </li>
+
+            <li>
               <router-link to="/accounts" class="flex items-center p-2.5 rounded-lg text-white hover:bg-white/20 group"
                 active-class="bg-white/30 font-semibold shadow-md" @click="closeSidebarOnMobile">
                 <font-awesome-icon icon="fa-solid fa-cash-register" class="w-5 h-5 text-white" />
@@ -224,13 +240,6 @@
               </router-link>
             </li>
 
-            <li>
-              <router-link to="/attendance" class="flex items-center p-2.5 rounded-lg text-white hover:bg-white/20 group"
-                active-class="bg-white/30 font-semibold shadow-md" @click="closeSidebarOnMobile">
-                <font-awesome-icon icon="fa-solid fa-user-check" class="w-5 h-5 text-white" />
-                <span class="ms-3">الحضور</span>
-              </router-link>
-            </li>
           </ul>
         </div>
 

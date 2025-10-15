@@ -187,7 +187,7 @@
 import { ref, computed } from 'vue'
 import api from '@/services/api'
 import { useToast } from '../../composables/useToast'
-import { formatDateTime } from '../../../utils/DateFormat'
+import { formatDateTime } from '../../utils/DateFormat'
 
 /* ========= Types ========= */
 interface Institute {
