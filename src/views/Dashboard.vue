@@ -575,32 +575,25 @@ const toggleChartView = (view: 'bar' | 'line') => {
 
 // Period update
 const updatePeriodData = () => {
-  console.log('Selected period:', selectedPeriod.value);
 };
 
 // Fetch dashboard data
 const fetchDashboardData = async () => {
   isLoading.value = true;
   try {
-    console.log('Fetching dashboard data...');
     
     const institutesResponse = await api.get('/institutes');
     const institutesData = institutesResponse?.data?.data || [];
-    console.log('Institutes response:', institutesResponse?.data);
     
     if (institutesData.length === 0) {
       institutes.value = [];
-      console.log('No institutes found');
       return;
     }
 
     const accountsResponse = await api.get('/accounts').catch(() => ({ data: { data: [] } }));
-    console.log('Accounts response:', accountsResponse?.data);
     const rawAccounts = accountsResponse?.data?.data || [];
-    console.log('Raw accounts:', rawAccounts);
 
     allAccounts.value = rawAccounts.filter((account: any) => {
-      console.log('Filtering account:', account);
       if (!account || typeof account !== 'object') {
         console.warn('Invalid account object:', account);
         return false;
@@ -622,12 +615,9 @@ const fetchDashboardData = async () => {
         console.warn('Missing created_at for account:', account.id, 'using current date as fallback');
       }
       
-      console.log('Valid account:', account.id, 'type:', account.procedure_type, 'amount:', amount);
       return true;
     });
     
-    console.log('Filtered accounts:', allAccounts.value);
-
     const [stagesResponse, subjectsResponse] = await Promise.all([
       api.get('/stages').catch(() => ({ data: { data: [] } })),
       api.get('/subjects').catch(() => ({ data: { data: [] } }))
@@ -639,7 +629,6 @@ const fetchDashboardData = async () => {
     const processedInstitutes = await Promise.all(
       institutesData.map(async (institute: any) => {
         try {
-          console.log('Processing institute:', institute.name);
           
           const [teachersResponse, studentsResponse, coursesResponse, accountsResponse] = await Promise.all([
             api.get(`/teachers?filter[institute.name]=${encodeURIComponent(institute.name)}`).catch(() => ({ data: { data: [] } })),
@@ -655,13 +644,13 @@ const fetchDashboardData = async () => {
           
           const instituteAccounts = accountsResponse?.data?.data || [];
           
-          console.log(`Institute ${institute.name}:`, {
-            teachers: teachersResponse?.data?.data?.length || 0,
-            students: studentsResponse?.data?.data?.length || 0,
-            courses: courses.length,
-            subjects: subjects.length,
-            accounts: instituteAccounts.length
-          });
+          // console.log(`Institute ${institute.name}:`, {
+          //   teachers: teachersResponse?.data?.data?.length || 0,
+          //   students: studentsResponse?.data?.data?.length || 0,
+          //   courses: courses.length,
+          //   subjects: subjects.length,
+          //   accounts: instituteAccounts.length
+          // });
           
           return {
             id: institute?.id || 0,
@@ -682,7 +671,6 @@ const fetchDashboardData = async () => {
     );
     
     institutes.value = processedInstitutes.filter((institute): institute is Institute => institute !== null);
-    console.log('Processed institutes:', institutes.value);
     
   } catch (err) {
     console.error('Error fetching dashboard data:', err);
@@ -694,10 +682,9 @@ const fetchDashboardData = async () => {
 };
 
 // Group accounts by month
-const groupAccountsByMonth = (accounts: Account[], type: 'receipt' | 'payment') => {
+const groupAccountsByMonth = (accounts: Account[], _type: 'receipt' | 'payment') => {
   if (!Array.isArray(accounts)) return [];
   
-  console.log(`Grouping ${type} accounts:`, accounts.length);
   
   const monthly: { [key: string]: number } = {};
   accounts.forEach(account => {
@@ -705,13 +692,11 @@ const groupAccountsByMonth = (accounts: Account[], type: 'receipt' | 'payment') 
       const accountDate = safeParseDate(account?.created_at) || new Date();
       const accountMonth = safeDateToMonthString(accountDate);
       
-      console.log(`Account ${account.id} ${type}:`, account.created_at, '->', accountMonth);
       
       if (accountMonth) {
         const amount = parseFloat(account?.amount || '0');
         if (!isNaN(amount) && amount > 0) {
           monthly[accountMonth] = (monthly[accountMonth] || 0) + amount;
-          console.log(`Added to ${accountMonth}: ${amount} -> total: ${monthly[accountMonth]}`);
         }
       } else {
         console.warn(`Skipping account ${account.id}: No valid date`);
@@ -730,7 +715,6 @@ const groupAccountsByMonth = (accounts: Account[], type: 'receipt' | 'payment') 
         safeDate.toLocaleDateString('ar-IQ', { month: 'short', year: 'numeric' }) :
         month;
       
-      console.log(`Month result ${month}:`, { month, amount, monthName });
       return {
         month,
         amount: Number(amount),
@@ -738,7 +722,6 @@ const groupAccountsByMonth = (accounts: Account[], type: 'receipt' | 'payment') 
       };
     });
     
-  console.log(`${type} monthly data:`, result);
   return result;
 };
 
@@ -1047,7 +1030,6 @@ const financialChartOptions = computed(() => {
     };
   }
   
-  console.log('Financial chart months:', months);
   
   return {
     ...chartTheme,
@@ -1129,7 +1111,6 @@ const financialChartSeries = computed(() => {
     ];
   }
   
-  console.log('Generating financial series for months:', months.map(m => m.month));
   
   const receiptsData = months.map(monthData => {
     const monthReceipts = allAccounts.value.filter(account => {
@@ -1143,7 +1124,6 @@ const financialChartSeries = computed(() => {
       return sum + (isNaN(amount) ? 0 : amount);
     }, 0);
     
-    console.log(`Receipts for ${monthData.month}:`, total, 'from', monthReceipts.length, 'accounts');
     return total;
   });
   
@@ -1159,7 +1139,6 @@ const financialChartSeries = computed(() => {
       return sum + (isNaN(amount) ? 0 : amount);
     }, 0);
     
-    console.log(`Payments for ${monthData.month}:`, total, 'from', monthPayments.length, 'accounts');
     return total;
   });
   
@@ -1176,14 +1155,12 @@ const financialChartSeries = computed(() => {
     }
   ];
   
-  console.log('Financial series:', series);
   return series;
 });
 
 // Get filtered months
 const getFilteredMonths = () => {
   if (!allAccounts.value || allAccounts.value.length === 0) {
-    console.log('No accounts available');
     return [];
   }
   
@@ -1191,17 +1168,14 @@ const getFilteredMonths = () => {
     .map(account => {
       const accountDate = safeParseDate(account?.created_at) || new Date();
       const monthString = safeDateToMonthString(accountDate);
-      console.log(`Account ${account.id} date:`, account.created_at, '->', monthString);
       return monthString;
     })
     .filter((month): month is string => month !== null && month !== undefined)
     .filter((month, index, self) => self.indexOf(month) === index)
     .sort();
   
-  console.log('Valid months extracted:', validMonths);
   
   if (validMonths.length === 0) {
-    console.log('No valid months found');
     return [];
   }
   
@@ -1222,11 +1196,9 @@ const getFilteredMonths = () => {
       safeDate.toLocaleDateString('ar-IQ', { month: 'short', year: 'numeric' }) :
       month;
     
-    console.log(`Month mapping ${month}:`, { month, monthName });
     return { month, monthName };
   });
   
-  console.log('Final filtered months:', result);
   return result;
 };
 

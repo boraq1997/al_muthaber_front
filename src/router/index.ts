@@ -23,6 +23,8 @@ import Accounts from '@/views/accounts/Accounts.vue'
 import Attendance from '@/views/attendance/Attendance.vue'
 import CoursesStudents from '@/views/CoursesStudents/CoursesStudents.vue'
 import Notifications from '@/views/Notifications/Notifications.vue'
+import ERROR404 from '@/views/other/ERROR404.vue'
+import ERROR500 from '@/views/other/ERROR500.vue'
 // ========================
 // Define application routes
 // ========================
@@ -38,7 +40,7 @@ const routes = [
 
   // Users module
   { path: '/users', name: 'users', component: Users, meta: { requiresAuth: true } },
-  { path: '/users/admins', name: 'admins', component: Admins, meta: { requiresAuth: true } },
+  { path: '/users/admins', name: 'admins', component: Admins, meta: { requiresAuth: true, requiresSuperAdmin: true } },
   { path: '/users/students', name: 'students', component: Students, meta: { requiresAuth: true } },
   { path: '/users/teachers', name: 'teachers', component: Teachers, meta: { requiresAuth: true } },
 
@@ -50,10 +52,20 @@ const routes = [
   { path: '/grades', name: 'grades', component: Grades, meta: { requiresAuth: true } },
   { path: '/schedules', name: 'schedules', component: Schedules, meta: { requiresAuth: true } },
   { path: '/stages', name: 'stages', component: AllStages, meta: { requiresAuth: true } },
-  { path: '/accounts', name: 'accounts', component: Accounts, meta: { requiresAuth: true } },
+  { path: '/accounts', name: 'accounts', component: Accounts, meta: { requiresAuth: true, requiresSuperAdmin: true } },
   { path: '/attendance', name: 'attendance', component: Attendance, meta: { requiresAuth: true } },
   {path: '/course.students', name: "course.students", component: CoursesStudents, meta: { requiresAuth: true }},
-  {path: '/notifications', name: "notifications", component: Notifications, meta: { requiresAuth: true }},
+  {path: '/notifications', name: "notifications", component: Notifications, meta: { requiresAuth: true, requiresSuperAdmin: true }},
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'NotFound',
+    component: ERROR404
+  },
+  {
+    path: '/server-error',
+    name: 'ServerError',
+    component: ERROR500
+  },
 ]
 
 // ========================
@@ -73,6 +85,7 @@ const router = createRouter({
 router.beforeEach((to, _from, next) => {
   // Retrieve token from local storage
   const token = localStorage.getItem('auth_token')
+  const role = localStorage.getItem('role')
 
   // Check if user is authenticated (true if token exists)
   const isAuthenticated = !!token
@@ -82,14 +95,16 @@ router.beforeEach((to, _from, next) => {
     next('/login')
 
   // If already logged in and trying to go to login page → redirect to dashboard
-  } else if (to.path === '/login' && isAuthenticated) {
-    next('/dashboard')
-
-  // Otherwise, allow navigation
-  } else {
-    next()
   }
-})
+  if (to.meta.requiresSuperAdmin && role !== 'superadmin') {
+    return next({name: 'dashboard'})
+  }
+  if (to.path === '/login' && isAuthenticated) {
+    next('/dashboard')
+  }
+  // Otherwise, allow navigation
+    next();
+});
 
 // ========================
 // Export router instance

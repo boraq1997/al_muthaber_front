@@ -156,6 +156,17 @@
           </td>
         </tr>
       </tbody>
+      <tfoot>
+          <tr class="font-semibold text-red-500 dark:text-red-500">
+              <th scope="row" class="px-6 py-3 text-base"><i class="fa-solid fa-hand-holding-dollar"></i> مجموع المدفوع</th>
+              <td class="px-6 py-3">{{ formatCurrency(totalExpense_sum) }}</td>
+          </tr>
+
+          <tr class="font-semibold text-green-500 dark:text-green-500">
+              <th scope="row" class="px-6 py-3 text-base"><i class="fa-solid fa-hand-holding-dollar fa-flip-horizontal"></i> مجموع المستلم</th>
+              <td class="px-6 py-3">{{ formatCurrency(totalIncome_sum) }}</td>
+          </tr>
+      </tfoot>
     </table>
   </div>
 
@@ -522,6 +533,9 @@ const isLoading = ref(false)
 const searchQuery = ref('')
 let searchTimer = null
 
+const totalExpense_sum = ref(0);
+const totalIncome_sum = ref(0);
+
 const fetchAccounts = async (page = 1) => {
   isLoading.value = true
   try {
@@ -534,6 +548,10 @@ const fetchAccounts = async (page = 1) => {
     }
     const response = await api.get('/accounts', { params })
     accounts.value = response.data.data
+
+    totalExpense_sum.value = response.data.meta.expense_sum
+    totalIncome_sum.value = response.data.meta.income_sum;
+
     meta.value = response.data.meta
     links.value = response.data.links
     currentPage.value = response.data.meta.current_page || 1

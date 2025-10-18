@@ -537,7 +537,6 @@ const resetForm = () => {
 
 // submit (create or update)
 const handleSubmit = async () => {
-  console.log(form.value);
   try {
     const payload = {
       student_id: form.value.student_id,

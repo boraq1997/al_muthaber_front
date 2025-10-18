@@ -130,7 +130,7 @@
                 leave-to-class="transform -translate-y-2 opacity-0"
               >
                 <ul v-show="usersSectionOpen" class="mt-1 pl-9 space-y-1 text-sm text-white">
-                  <li>
+                  <li v-if="role === 'superadmin'">
                     <router-link
                       to="/users/admins"
                       class="flex items-center px-3 py-2 rounded text-white hover:bg-white/20 transition-all duration-200 relative"
@@ -224,7 +224,7 @@
               </router-link>
             </li>
 
-            <li>
+            <li v-if="role === 'superadmin'">
               <router-link to="/notifications" class="flex items-center p-2.5 rounded-lg text-white hover:bg-white/20 group"
                 active-class="bg-white/30 font-semibold shadow-md" @click="closeSidebarOnMobile">
                 <font-awesome-icon icon="fa-solid fa-bell" class="w-5 h-5 text-white" />
@@ -232,7 +232,7 @@
               </router-link>
             </li>
 
-            <li>
+            <li v-if="role === 'superadmin'">
               <router-link to="/accounts" class="flex items-center p-2.5 rounded-lg text-white hover:bg-white/20 group"
                 active-class="bg-white/30 font-semibold shadow-md" @click="closeSidebarOnMobile">
                 <font-awesome-icon icon="fa-solid fa-cash-register" class="w-5 h-5 text-white" />
@@ -262,7 +262,7 @@
 /**
  * State and logic for sidebar component
  */
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 
 const userDropdownOpen = ref(false) // Controls user dropdown open/close
 const usersSectionOpen = ref(true)  // Controls collapsible "Users" section
@@ -291,12 +291,18 @@ function closeSidebarOnMobile() {
   }
 }
 
+const role = ref(localStorage.getItem('role'));
+
 /** Logout: remove user data and reload */
 function logout() {
   localStorage.removeItem('auth_token')
   localStorage.removeItem('username')
   location.reload()
 }
+
+onMounted(()=>{
+  role.value = localStorage.getItem('role')
+})
 </script>
 
 <style scoped>

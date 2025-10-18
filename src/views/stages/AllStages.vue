@@ -1012,8 +1012,6 @@ const fetchData = async (): Promise<void> => {
     }
     // Wait for DOM update to ensure refs are assigned
     await nextTick();
-    console.log('stageDropdownButton after fetch:', stageDropdownButton.value);
-    console.log('stageDropdownMenu after fetch:', stageDropdownMenu.value);
   } catch (err: any) {
     showToastMessage('error', 'حدث خطأ أثناء جلب البيانات');
     console.error('خطأ في جلب البيانات:', err);
@@ -1036,8 +1034,6 @@ const selectInstitute = async (institute: Institute): Promise<void> => {
   }
   // Wait for DOM update
   await nextTick();
-  console.log('stageDropdownButton after selectInstitute:', stageDropdownButton.value);
-  console.log('stageDropdownMenu after selectInstitute:', stageDropdownMenu.value);
 };
 
 const selectStage = async (stage: Stage): Promise<void> => {
@@ -1048,20 +1044,16 @@ const selectStage = async (stage: Stage): Promise<void> => {
   subjects.value = await fetchSubjects(stage.id);
   // Wait for DOM update
   await nextTick();
-  console.log('stageDropdownButton after selectStage:', stageDropdownButton.value);
-  console.log('stageDropdownMenu after selectStage:', stageDropdownMenu.value);
 };
 
 // Dropdown Handlers
 const toggleStageDropdown = async (): Promise<void> => {
   openStageDropdown.value = !openStageDropdown.value;
-  console.log('openStageDropdown:', openStageDropdown.value);
   openSubjectDropdown.value = null;
   openUnitDropdown.value = null;
   // Wait for DOM update to ensure stageDropdownMenu is available
   if (openStageDropdown.value) {
     await nextTick();
-    console.log('stageDropdownMenu after toggle:', stageDropdownMenu.value);
   }
 };
 
@@ -1084,7 +1076,6 @@ const handleClickOutside = (event: MouseEvent): void => {
     const isInsideStageButton = stageDropdownButton.value && stageDropdownButton.value.contains(event.target as Node);
     if (!isInsideStageDropdown && !isInsideStageButton) {
       openStageDropdown.value = false;
-      console.log('Closed stage dropdown due to outside click');
     }
   }
 
@@ -1094,7 +1085,6 @@ const handleClickOutside = (event: MouseEvent): void => {
     const isInsideSubjectButton = subjectDropdownButton.value.some(btn => btn?.contains(event.target as Node));
     if (!isInsideSubjectDropdown && !isInsideSubjectButton) {
       openSubjectDropdown.value = null;
-      console.log('Closed subject dropdown due to outside click');
     }
   }
 
@@ -1104,7 +1094,6 @@ const handleClickOutside = (event: MouseEvent): void => {
     const isInsideUnitButton = unitDropdownButton.value.some(btn => btn?.contains(event.target as Node));
     if (!isInsideUnitDropdown && !isInsideUnitButton) {
       openUnitDropdown.value = null;
-      console.log('Closed unit dropdown due to outside click');
     }
   }
 };

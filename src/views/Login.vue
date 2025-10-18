@@ -116,9 +116,11 @@ const handleLogin = async () => {
     const res = await api.post('/admin/login', form.value)
     const token = res.data.token
     const username = res.data.admin.full_name
+    const role = res.data.roles[0];
 
     // Save user data in localStorage
     localStorage.setItem('username', username)
+    localStorage.setItem('role', role);
     localStorage.setItem('auth_token', token)
 
     // Redirect to dashboard
