@@ -117,14 +117,14 @@
           <td class="px-2 sm:px-3 py-2">{{ student.stage_name }}</td>
           <td class="px-2 sm:px-3 py-2 hidden sm:table-cell">{{ student.institute_name }}</td>
           <td class="px-2 sm:px-3 py-2">
-            <div class="flex items-center">
-              <div
-                class="h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full me-1 sm:me-2"
-                :class="student.is_active ? 'bg-red-500' : 'bg-green-500'"
-              ></div>
-              {{ student.is_active ? 'غير نشط' : 'نشط' }}
-            </div>
-          </td>
+              <div class="flex items-center">
+                <div
+                  class="h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full me-1 sm:me-2"
+                  :class="Number(student.Is_active) ? 'bg-green-500' : 'bg-red-500'"
+                ></div>
+                {{ Number(student.Is_active) ? 'نشط' : 'غير نشط' }}
+              </div>
+            </td>
           <td class="px-2 sm:px-3 py-2">
             <button
               ref="dropdownButton"

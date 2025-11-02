@@ -105,15 +105,15 @@
           <td class="px-2 sm:px-3 py-2">{{ teacher.PhoneNumber }}</td>
           <td class="px-2 sm:px-3 py-2">{{ teacher.subject_name }}</td>
           <td class="px-2 sm:px-3 py-2 hidden sm:table-cell">{{ teacher.institute_name }}</td>
-          <td class="px-2 sm:px-3 py-2">
-            <div class="flex items-center">
-              <div
-                class="h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full me-1 sm:me-2"
-                :class="teacher.is_active ? 'bg-red-500' : 'bg-green-500'"
-              ></div>
-              {{ teacher.is_active ? 'غير نشط' : 'نشط' }}
-            </div>
-          </td>
+           <td class="px-2 sm:px-3 py-2">
+              <div class="flex items-center">
+                <div
+                  class="h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full me-1 sm:me-2"
+                  :class="Number(teacher.IsActive) ? 'bg-green-500' : 'bg-red-500'"
+                ></div>
+                {{ Number(teacher.IsActive) ? 'نشط' : 'غير نشط' }}
+              </div>
+            </td>
           <td class="px-2 sm:px-3 py-2">
             <button
               ref="dropdownButton"
